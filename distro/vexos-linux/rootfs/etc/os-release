@@ -1,0 +1,6 @@
+NAME="VexOS Linux"
+VERSION="1.0"
+ID=vexos
+VERSION_ID="1.0"
+PRETTY_NAME="VexOS Linux 1.0"
+HOME_URL="https://github.com/Nour-yahyaoui/vexos"

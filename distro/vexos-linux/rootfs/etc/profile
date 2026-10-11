@@ -1,0 +1,14 @@
+# VexOS Linux login profile
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+export HOME=/root
+export TERM=${TERM:-linux}
+export EDITOR=vexpad
+export VISUAL=vexpad
+export PAGER=less
+export PS1='\[\e[1;35m\]vexos\[\e[0m\]:\w\$ '
+
+alias ll='ls -la'
+alias la='ls -A'
+alias ..='cd ..'
+
+cd "$HOME" 2>/dev/null

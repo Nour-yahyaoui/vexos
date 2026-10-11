@@ -1,0 +1,11 @@
+
+  __   __            ___  ____
+  \ \ / /____  __   / _ \/ ___|
+   \ V // _ \ \/ /  | | | \___ \
+    \ /|  __/>  <   | |_| |___) |
+     \_/ \___/_/\_\   \___/|____/   Linux 1.0
+
+  Welcome to VexOS Linux.
+  Try:  ls   mkdir projects   cd projects   vexpad hello.sh
+        vexpad --help   (editor cheat sheet)
+

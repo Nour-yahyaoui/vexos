@@ -1,0 +1,4 @@
+#!/bin/sh
+# System shutdown: flush disks before power-off or reboot.
+sync
+umount -a -r 2>/dev/null

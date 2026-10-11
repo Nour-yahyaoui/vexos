@@ -1,0 +1,30 @@
+#!/bin/sh
+# vexpad - the VexOS terminal text editor (v1).
+# v1 ships BusyBox vi as the engine; vexpad adds a friendly wrapper.
+
+case "${1:-}" in
+    -h|--help)
+        cat <<'EOF'
+vexpad - terminal text editor for VexOS
+
+Usage: vexpad [FILE ...]
+
+Quick guide (modal editor, like vi):
+  i          insert text before cursor   (Esc to stop typing)
+  a          append text after cursor
+  dd         delete the current line
+  yy / p     copy line / paste it below
+  /text      search for "text"   (n = next match)
+  :w         save            :q   quit
+  :wq        save and quit   :q!  quit without saving
+  :set nu    show line numbers
+  u          undo
+EOF
+        exit 0
+        ;;
+esac
+
+if [ $# -eq 0 ]; then
+    echo "vexpad: no file given, opening an empty buffer (use :w NAME to save)"
+fi
+exec vi "$@"

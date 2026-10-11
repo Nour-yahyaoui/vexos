@@ -1,0 +1,20 @@
+#!/bin/sh
+# System startup: hostname, loopback, networking (DHCP on eth0), banner.
+
+hostname vexos
+ifconfig lo 127.0.0.1 up
+mdev -s 2>/dev/null
+
+# Network in the background so the shell appears immediately
+(
+    for i in 1 2 3 4 5; do
+        [ -e /sys/class/net/eth0 ] && break
+        sleep 1
+    done
+    if [ -e /sys/class/net/eth0 ]; then
+        ifconfig eth0 up
+        udhcpc -i eth0 -b -q -s /usr/share/udhcpc/default.script >/dev/null 2>&1
+    fi
+) &
+
+cat /etc/motd

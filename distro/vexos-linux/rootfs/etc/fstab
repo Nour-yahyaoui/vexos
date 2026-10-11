@@ -1,0 +1,5 @@
+# VexOS runs entirely from the initramfs; no disk mounts are required.
+proc   /proc  proc    defaults  0 0
+sysfs  /sys   sysfs   defaults  0 0
+tmpfs  /tmp   tmpfs   defaults  0 0
+tmpfs  /run   tmpfs   defaults  0 0

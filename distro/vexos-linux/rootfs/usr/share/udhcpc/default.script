@@ -1,0 +1,19 @@
+#!/bin/sh
+# udhcpc hook: configure the interface and DNS from the DHCP lease.
+case "$1" in
+    deconfig)
+        ifconfig "$interface" 0.0.0.0
+        ;;
+    bound|renew)
+        ifconfig "$interface" "$ip" netmask "${subnet:-255.255.255.0}"
+        route del default 2>/dev/null
+        for gw in $router; do
+            route add default gw "$gw" dev "$interface"
+        done
+        : > /etc/resolv.conf
+        for ns in $dns; do
+            echo "nameserver $ns" >> /etc/resolv.conf
+        done
+        ;;
+esac
+exit 0
