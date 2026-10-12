@@ -3,6 +3,7 @@ xfce4
 xfce4-terminal
 xfce4-goodies
 lightdm
+lightdm-gtk-greeter
 xserver-xorg
 xserver-xorg-video-all
 fonts-dejavu-core
@@ -13,4 +14,5 @@ firefox-esr
 arc-theme
 papirus-icon-theme
 fonts-inter
+fonts-jetbrains-mono
 plank

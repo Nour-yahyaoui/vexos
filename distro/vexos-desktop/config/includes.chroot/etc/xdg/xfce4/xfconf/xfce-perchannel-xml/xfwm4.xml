@@ -3,7 +3,21 @@
   <property name="general" type="empty">
     <property name="theme" type="string" value="Arc-Dark"/>
     <property name="title_font" type="string" value="Inter Bold 10"/>
+    <property name="title_alignment" type="string" value="center"/>
     <property name="button_layout" type="string" value="O|HMC"/>
+    <property name="button_offset" type="int" value="6"/>
+    <property name="button_spacing" type="int" value="6"/>
     <property name="use_compositing" type="bool" value="true"/>
+    <property name="show_frame_shadow" type="bool" value="true"/>
+    <property name="show_popup_shadow" type="bool" value="true"/>
+    <property name="show_dock_shadow" type="bool" value="true"/>
+    <property name="frame_opacity" type="int" value="100"/>
+    <property name="inactive_opacity" type="int" value="100"/>
+    <property name="borderless_maximize" type="bool" value="true"/>
+    <property name="snap_to_border" type="bool" value="true"/>
+    <property name="snap_to_windows" type="bool" value="true"/>
+    <property name="wrap_workspaces" type="bool" value="false"/>
+    <property name="double_click_action" type="string" value="maximize"/>
+    <property name="placement_mode" type="string" value="center"/>
   </property>
 </channel>
