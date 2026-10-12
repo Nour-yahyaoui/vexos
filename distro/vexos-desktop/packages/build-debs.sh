@@ -15,7 +15,7 @@ trap 'rm -rf "$WORK"' EXIT
 rm -rf "$DIST"
 mkdir -p "$DIST"
 
-for name in vexpad vexos-branding; do
+for name in vexpad vexos-branding vexos-devstudio; do
     dst=$WORK/$name
     cp -a "$HERE/src/$name" "$dst"
 
@@ -27,7 +27,9 @@ for name in vexpad vexos-branding; do
 
     find "$dst" -type d -exec chmod 0755 {} +
     find "$dst" -type f -exec chmod 0644 {} +
-    [ -f "$dst/usr/bin/vexpad" ] && chmod 0755 "$dst/usr/bin/vexpad" || true
+    # Launchers in usr/bin and the DevStudio server are executable.
+    [ -d "$dst/usr/bin" ] && find "$dst/usr/bin" -type f -exec chmod 0755 {} +
+    [ -f "$dst/usr/lib/vexos-devstudio/server.py" ] && chmod 0755 "$dst/usr/lib/vexos-devstudio/server.py" || true
 
     ver=$(sed -n 's/^Version: //p' "$dst/DEBIAN/control")
     dpkg-deb --root-owner-group --build "$dst" "$DIST/${name}_${ver}_all.deb" >/dev/null
@@ -39,7 +41,7 @@ done
 
 if [ -n "$LIVE_DIR" ]; then
     mkdir -p "$LIVE_DIR"
-    rm -f "$LIVE_DIR"/vexpad_*.deb "$LIVE_DIR"/vexos-branding_*.deb
+    rm -f "$LIVE_DIR"/vexpad_*.deb "$LIVE_DIR"/vexos-branding_*.deb "$LIVE_DIR"/vexos-devstudio_*.deb
     cp "$DIST"/*.deb "$LIVE_DIR"/
     echo "copied packages to $LIVE_DIR"
 fi

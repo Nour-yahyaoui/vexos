@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=VexOS DevStudio
+GenericName=Web IDE
+Comment=Code, run, and preview C, Python, Node.js, React, Next.js, and Rust
+Exec=vexos-devstudio
+Icon=vexos-logo
+Terminal=false
+Categories=Development;IDE;
+Keywords=code;editor;ide;node;react;rust;c;python;
+StartupNotify=true

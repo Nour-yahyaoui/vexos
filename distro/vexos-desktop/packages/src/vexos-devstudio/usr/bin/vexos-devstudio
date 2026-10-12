@@ -1,0 +1,31 @@
+#!/bin/sh
+# Starts the DevStudio server if it is not running, then opens it in the browser.
+# The server listens on 127.0.0.1 only, so other computers cannot reach it.
+set -eu
+
+PORT=${VEXDEV_PORT:-8765}
+URL="http://127.0.0.1:$PORT/"
+LOG_DIR=${XDG_STATE_HOME:-$HOME/.local/state}/vexos-devstudio
+mkdir -p "$LOG_DIR"
+
+running() {
+    python3 -c "import sys, urllib.request
+try:
+    urllib.request.urlopen('$URL', timeout=1)
+except Exception:
+    sys.exit(1)" 2>/dev/null
+}
+
+if ! running; then
+    nohup python3 /usr/lib/vexos-devstudio/server.py >"$LOG_DIR/server.log" 2>&1 &
+    i=0
+    while [ $i -lt 30 ] && ! running; do
+        sleep 0.2
+        i=$((i + 1))
+    done
+fi
+
+if command -v firefox-esr >/dev/null 2>&1; then
+    exec firefox-esr --new-window "$URL"
+fi
+exec xdg-open "$URL"

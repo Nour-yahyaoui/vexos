@@ -1,5 +1,3 @@
-# dev: compilers and JavaScript tooling
-build-essential
-nodejs
-npm
-python3-dev
+# dev: extra tools on top of the desktop, for people who build native software
+clang
+valgrind

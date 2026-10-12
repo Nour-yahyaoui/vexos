@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Docs and tutorials: VexOS</title>
-  <meta name="description" content="How to install, use, and build VexOS Desktop: VirtualBox setup, first steps, Python and Node.js tutorials, apt, vexpad, and troubleshooting.">
+  <meta name="description" content="How to install, use, and build VexOS Desktop: VirtualBox setup, first steps, Python, Node.js, and Rust tutorials, VexOS DevStudio, apt, vexpad, and troubleshooting.">
   <link rel="icon" href="assets/logo.png">
   <script>
     (function () {
@@ -55,6 +55,7 @@
       <li><a href="#overview">What is VexOS?</a></li>
       <li><a href="#virtualbox">Install in VirtualBox</a></li>
       <li><a href="#first-steps">First steps</a></li>
+      <li><a href="#devstudio">VexOS DevStudio</a></li>
       <li><a href="#tutorials">Tutorials</a></li>
       <li><a href="#build">Build the ISO yourself</a></li>
       <li><a href="#vexos-linux">VexOS Linux (terminal)</a></li>
@@ -144,6 +145,40 @@ git --version
 firefox-esr --version</code></pre>
     </section>
 
+    <section id="devstudio" class="doc-section">
+      <h2><span data-icon="code"></span>VexOS DevStudio</h2>
+      <p class="lead-doc">DevStudio is a web IDE that runs on your computer. Open it from the desktop icon or the application menu. It starts a local server and opens Firefox at <code>127.0.0.1:8765</code>. Only this computer can reach it.</p>
+
+      <h3>What you can do</h3>
+      <ul>
+        <li><strong>Edit</strong> with tabs, syntax colors, and Ctrl+S to save.</li>
+        <li><strong>Run</strong> with Ctrl+Enter: C and C++ (compiled with gcc and g++), Python, JavaScript (Node.js), Rust, and shell scripts. Programs that read input can be answered in the input box under the output.</li>
+        <li><strong>Create projects</strong> from the New project menu: C, Python, Node.js, static web page, React (Vite), Next.js, and Rust (Cargo).</li>
+        <li><strong>Preview</strong> running web apps in the Preview tab.</li>
+        <li><strong>Use a terminal</strong> in the command box at the bottom. For example, <code>npm install axios</code> runs in the selected folder.</li>
+        <li><strong>Ask the AI</strong> about your code, or fix the last error. You need a Groq API key.</li>
+      </ul>
+      <p>Your projects are in <code>~/VexProjects</code>.</p>
+
+      <h3>Add your Groq API key</h3>
+      <ol>
+        <li>Create a free key at <a href="https://console.groq.com/keys" rel="noopener" target="_blank">console.groq.com/keys</a>.</li>
+        <li>In DevStudio, click <strong>Settings</strong>, paste the key, and click <strong>Save</strong>.</li>
+      </ol>
+      <div class="callout">
+        <strong>Where the key goes</strong>
+        <p>The key is saved only on this computer, in a file that only your user can read. The screen never shows the whole key again. It is sent only to <code>api.groq.com</code>, when you ask the AI something.</p>
+      </div>
+
+      <h3>Known limits</h3>
+      <ul>
+        <li>The syntax-colored editor loads from the internet the first time. Without internet, DevStudio uses a plain text editor.</li>
+        <li>React and Next.js projects download packages when they are created, so they need internet.</li>
+        <li>Debian's npm is version 9.2. To update it, run <code>sudo npm install -g npm@latest</code>.</li>
+        <li>For debugging with gdb, use the terminal. There is no debugger panel yet.</li>
+      </ul>
+    </section>
+
     <section id="tutorials" class="doc-section">
       <h2><span data-icon="book"></span>Tutorials</h2>
       <p>Each tutorial works on a running VexOS Desktop session. Open a terminal first.</p>
@@ -203,13 +238,46 @@ htop</code></pre>
 vexpad ~/Desktop/notes.txt</code></pre>
       <p>Use the usual <code>vi</code> keys: press <kbd>i</kbd> to type, <kbd>Esc</kbd> to stop typing, then <code>:wq</code> and <kbd>Enter</kbd> to save and quit.</p>
 
-      <h3>Tutorial 5: Make a web page</h3>
+      <h3>Tutorial 5: Compile and run C</h3>
+      <ol>
+        <li>In DevStudio, choose <strong>C project</strong> in the dropdown, click <strong>New project</strong>, and name it <code>hello-c</code>.</li>
+        <li>Open <code>main.c</code> in the Workspace on the left. Change the message, for example to <code>printf("Hello, VexOS!\n");</code>.</li>
+        <li>Press <strong>Run</strong> (or Ctrl+Enter). The output panel shows the compiler messages and then the program's output.</li>
+      </ol>
+      <p>Compiler warnings are shown with the line numbers. If a line has an error, the program does not run, and the output shows the message.</p>
+
+      <h3>Tutorial 6: Build a React app</h3>
+      <ol>
+        <li>Choose <strong>React (Vite)</strong> in the dropdown and create a project named <code>my-react</code>. This downloads packages, so it needs internet and takes a minute.</li>
+        <li>When creation finishes, open the project folder and select <code>src/App.jsx</code>. Edit the text and save with Ctrl+S.</li>
+        <li>Press <strong>Run</strong>. The dev server starts, and the app opens in the <strong>Preview</strong> tab. Each save reloads the preview.</li>
+        <li>Press <strong>Stop</strong> when you are finished.</li>
+      </ol>
+
+      <h3>Tutorial 7: Build a Next.js app</h3>
+      <p>Choose <strong>Next.js app</strong> and name it <code>my-next</code>. The app uses TypeScript, the App Router, Tailwind, and ESLint. Run it the same way as the React app: the page opens in Preview at <code>localhost:3000</code>.</p>
+
+      <h3>Tutorial 8: Rust with Cargo</h3>
+      <ol>
+        <li>Choose <strong>Rust (Cargo)</strong> and create <code>hello-rust</code>.</li>
+        <li>Press <strong>Run</strong>. Cargo builds and runs <code>src/main.rs</code>.</li>
+        <li>To add a library, open the terminal box at the bottom and run <code>cargo add serde</code> in the project folder.</li>
+      </ol>
+
+      <h3>Tutorial 9: Ask the AI about an error</h3>
+      <ol>
+        <li>Make a mistake in a program on purpose, then press <strong>Run</strong>.</li>
+        <li>Press <strong>Fix error</strong> in the AI panel. The assistant reads the file and the last output, then explains the problem and gives the fixed code.</li>
+        <li>Press <strong>Replace file</strong> on the code block to apply the fix, or <strong>Insert at cursor</strong> to add it where you are typing.</li>
+      </ol>
+
+      <h3>Tutorial 10: Make a web page</h3>
       <p>Copy <code>Desktop/hello-web.html</code> to <code>Desktop/my-page.html</code> and open it in Firefox. Edit it in <code>vexpad</code> and reload Firefox to see your changes. Everything runs locally, so no server is needed.</p>
     </section>
 
     <section id="build" class="doc-section">
       <h2><span data-icon="wrench"></span>Build the ISO yourself</h2>
-      <p>You can build the desktop ISO from the source. The build needs a Debian or Ubuntu machine with about 15 GB of free disk space and 4 GB of RAM. A Debian install under WSL works for building. It takes 30 to 90 minutes.</p>
+      <p>You can build the desktop ISO from the source. The build needs a Debian or Ubuntu machine with about 25 GB of free disk space and 4 GB of RAM. A Debian install under WSL works for building. It takes 30 to 90 minutes.</p>
 
       <h3>1. Download only the desktop folder</h3>
       <p>A sparse clone skips the Linux kernel source and downloads just what the desktop build needs:</p>

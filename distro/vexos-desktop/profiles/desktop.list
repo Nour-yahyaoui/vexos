@@ -16,3 +16,14 @@ papirus-icon-theme
 fonts-inter
 fonts-jetbrains-mono
 plank
+# dev environment: C/C++, Node.js, Rust, and the DevStudio IDE (included by default)
+build-essential
+gdb
+cmake
+nodejs
+npm
+python3-dev
+rustc
+cargo
+rustfmt
+vexos-devstudio

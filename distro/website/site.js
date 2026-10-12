@@ -27,9 +27,9 @@
   var FEATURES = [
     { icon: "monitor", title: "XFCE desktop", text: "Light, familiar, and fast. Dark theme, a dock, and a clean login screen." },
     { icon: "globe", title: "Firefox ready", text: "Firefox ESR for web apps and HTML and JavaScript pages out of the box." },
-    { icon: "code", title: "Python and Node.js", text: "Python 3 with pip and venv, plus Node.js and npm, ready to run your code." },
+    { icon: "code", title: "C, Python, Node, Rust", text: "gcc, Python 3, Node.js with npm, and Rust with cargo, all installed and ready to use." },
     { icon: "package", title: "Full apt", text: "Every Debian package is one command away. Nothing is locked down." },
-    { icon: "terminal", title: "Terminal tools", text: "git, build-essential, vim, nano, htop, and vexpad for quick edits." },
+    { icon: "terminal", title: "VexOS DevStudio", text: "A built-in web IDE: edit, run, and preview C, Python, JavaScript, React, Next.js, and Rust, with an AI assistant." },
     { icon: "shield", title: "Built on Debian", text: "Debian's security updates and a stable base you already trust." }
   ];
 

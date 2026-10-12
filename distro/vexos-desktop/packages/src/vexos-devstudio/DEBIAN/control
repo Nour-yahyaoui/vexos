@@ -1,0 +1,13 @@
+Package: vexos-devstudio
+Version: 1.0-1
+Section: devel
+Priority: optional
+Architecture: all
+Maintainer: Nour-yahyaoui <https://github.com/Nour-yahyaoui>
+Depends: python3 (>= 3.9)
+Recommends: gcc, g++, make, gdb, nodejs, npm, rustc, cargo, git, xdg-utils
+Description: VexOS DevStudio, a web IDE for C, Python, Node.js, and Rust
+ A browser-based development environment that runs on this computer.
+ Edit code with syntax colors, run C, C++, Python, JavaScript, Rust and
+ shell scripts, create React, Next.js, and Rust projects, and preview web
+ apps. An AI assistant uses the Groq API when you add your key in Settings.

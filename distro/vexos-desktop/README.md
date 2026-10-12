@@ -32,6 +32,7 @@ Custom packages live in `packages/src/`:
 
 - `vexpad`: the terminal editor (`/usr/bin/vexpad`).
 - `vexos-branding`: logo and wallpaper.
+- `vexos-devstudio`: the DevStudio web IDE, its server, and its desktop entry.
 
 `auto/config` builds them with `packages/build-debs.sh` into `config/packages.chroot/`,
 so the ISO installs them directly. The script also writes an apt index (`packages/dist/Packages`)
@@ -43,6 +44,47 @@ sh packages/build-debs.sh
 
 To add a package, create `packages/src/<name>/DEBIAN/control` and its files under the same folder.
 
+## Development environment
+
+The desktop ships a ready development setup. All of it is installed by default:
+
+| Area | What is installed |
+|---|---|
+| C and C++ | gcc, g++, make, gdb, cmake |
+| JavaScript | Node.js 20 LTS (Debian `nodejs` 20.19) with npm |
+| Rust | rustc and cargo 1.85, rustfmt |
+| Python | Python 3 with pip, venv, and development headers |
+| Version control | git |
+| IDE | **VexOS DevStudio** (see below) |
+
+The `dev` profile adds clang and valgrind on top.
+
+### VexOS DevStudio
+
+A web IDE that runs on this computer. Open it from the desktop icon or the application menu. It starts a local server and opens Firefox.
+
+- **Editor:** tabs, syntax colors (Monaco, the editor from VS Code), Ctrl+S to save.
+- **Run:** Ctrl+Enter runs the open file or project. Supported: `.c`, `.cpp`, `.py`, `.js`, `.rs`, `.sh`, and folders with `Cargo.toml`, `package.json` (`dev` or `start` script), `Makefile`, or a `main.c`.
+- **Input:** type into the input box under the output to answer a program's questions.
+- **Terminal:** the command box runs any shell command in the selected folder (for example `npm install axios`).
+- **New project:** C, Python, Node.js, static web page, React (Vite), Next.js (TypeScript, App Router, Tailwind), and Rust (Cargo).
+- **Preview:** a running web app (Vite, Next.js, and others) opens in the Preview tab. Open `.html` files there too.
+- **AI assistant:** explain code, fix the last error, improve a file, or write tests. Replies can be inserted into the file. Add a Groq API key in Settings.
+
+Workspace: `~/VexProjects`. Settings and the API key: `~/.config/vexos-devstudio/settings.json` (readable only by you).
+
+**AI key.** Create a key at [console.groq.com/keys](https://console.groq.com/keys) and paste it in Settings. The key stays on this computer. It is sent only to `api.groq.com`, and the screen shows only its last four characters. The default model is `llama-3.3-70b-versatile`; you can change it in Settings.
+
+**Security.** The server listens on `127.0.0.1` only, so other computers cannot reach it. Every API call needs a token that the server creates each time it starts. Other websites cannot read it, so they cannot drive the IDE.
+
+**Known limits.**
+- The syntax-colored editor loads from the internet on first start. Without internet, DevStudio uses a plain text editor.
+- React and Next.js projects download packages from npm when they are created, so they need internet.
+- Debian's npm is version 9.2. To update it, run `sudo npm install -g npm@latest`.
+- Debugging with gdb is available from the terminal. There is no debugger panel yet.
+
+The package sources are in `packages/src/vexos-devstudio/` (server, web UI, launcher, and desktop entry).
+
 ## Check before building
 
 ```sh
@@ -51,7 +93,7 @@ sh validate.sh      # checks files, scripts, package list, wallpaper; no build
 
 ## Build (on a Debian or Ubuntu machine, not in the sandbox)
 
-Needs about 15 GB free disk, 4 GB RAM, and an internet connection. A build takes 30-90 minutes.
+Needs about 25 GB free disk, 4 GB RAM, and an internet connection. The development tools make the image larger than before. A build takes 30-90 minutes.
 
 ```sh
 sudo apt install live-build

@@ -14,6 +14,13 @@ for f in auto/config auto/build auto/clean \
          packages/build-debs.sh \
          packages/src/vexpad/DEBIAN/control packages/src/vexpad/usr/bin/vexpad \
          packages/src/vexos-branding/DEBIAN/control \
+         packages/src/vexos-devstudio/DEBIAN/control \
+         packages/src/vexos-devstudio/usr/bin/vexos-devstudio \
+         packages/src/vexos-devstudio/usr/lib/vexos-devstudio/server.py \
+         packages/src/vexos-devstudio/usr/share/vexos-devstudio/web/index.html \
+         packages/src/vexos-devstudio/usr/share/vexos-devstudio/web/app.js \
+         packages/src/vexos-devstudio/usr/share/vexos-devstudio/web/app.css \
+         packages/src/vexos-devstudio/usr/share/applications/vexos-devstudio.desktop \
          config/hooks/normal/0100-vexos-branding.hook.chroot \
          config/includes.chroot/etc/skel/Desktop/hello-web.html \
          config/includes.chroot/etc/skel/Desktop/hello.py \
@@ -25,7 +32,8 @@ done
 
 # 2. Shell scripts parse
 for f in auto/config auto/build auto/clean validate.sh packages/build-debs.sh \
-         config/hooks/normal/*.hook.chroot packages/src/vexpad/usr/bin/vexpad; do
+         config/hooks/normal/*.hook.chroot packages/src/vexpad/usr/bin/vexpad \
+         packages/src/vexos-devstudio/usr/bin/vexos-devstudio; do
     if sh -n "$f" 2>/dev/null; then pass "syntax: $f"; else bad "syntax error: $f"; fi
 done
 
@@ -36,7 +44,8 @@ done
 
 # 4. Executable bits where they matter
 for f in auto/config auto/build auto/clean packages/build-debs.sh \
-         config/hooks/normal/*.hook.chroot packages/src/vexpad/usr/bin/vexpad; do
+         config/hooks/normal/*.hook.chroot packages/src/vexpad/usr/bin/vexpad \
+         packages/src/vexos-devstudio/usr/bin/vexos-devstudio packages/src/vexos-devstudio/usr/lib/vexos-devstudio/server.py; do
     if [ -x "$f" ]; then pass "executable: $f"; else bad "not executable: $f"; fi
 done
 

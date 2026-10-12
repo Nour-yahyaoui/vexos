@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VexOS DevStudio</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><span class="logo">V</span> DevStudio</div>
+    <div class="group">
+      <select id="kind" title="Project type">
+        <option value="c">C project</option>
+        <option value="python">Python project</option>
+        <option value="node">Node.js project</option>
+        <option value="static">Static web page</option>
+        <option value="react">React (Vite)</option>
+        <option value="next">Next.js app</option>
+        <option value="rust">Rust (Cargo)</option>
+      </select>
+      <button id="newProject" class="btn">New project</button>
+    </div>
+    <div class="group">
+      <button id="run" class="btn primary" title="Run (Ctrl+Enter)">Run</button>
+      <button id="stop" class="btn" title="Stop the running program">Stop</button>
+      <button id="save" class="btn" title="Save (Ctrl+S)">Save</button>
+    </div>
+    <div class="group grow"></div>
+    <div class="group">
+      <button id="openSettings" class="btn ghost" title="Settings and API keys">Settings</button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="side-head">
+      <span>Workspace</span>
+      <div class="side-actions">
+        <button id="newFile" class="mini" title="New file">+ File</button>
+        <button id="newFolder" class="mini" title="New folder">+ Folder</button>
+        <button id="renameItem" class="mini" title="Rename selected">Rename</button>
+        <button id="deleteItem" class="mini danger" title="Delete selected">Delete</button>
+        <button id="refresh" class="mini" title="Refresh">Refresh</button>
+      </div>
+    </div>
+    <div id="tree" class="tree" role="tree"></div>
+  </aside>
+
+  <main class="editor-wrap">
+    <div id="tabs" class="tabs"></div>
+    <div id="editor" class="editor"></div>
+    <textarea id="fallback" class="fallback hidden" spellcheck="false"></textarea>
+    <div id="welcome" class="welcome">
+      <h2>Welcome to VexOS DevStudio</h2>
+      <p>Open a file from the Workspace on the left, or start a new project with the dropdown at the top.</p>
+      <ul>
+        <li>Run a file or project with Run (Ctrl+Enter). Output appears below.</li>
+        <li>Web apps show their page in the Preview tab.</li>
+        <li>Ask the AI assistant on the right after adding your Groq key in Settings.</li>
+      </ul>
+    </div>
+  </main>
+
+  <aside class="ai">
+    <div class="side-head">
+      <span>AI assistant</span>
+      <span id="aiState" class="pill">no key</span>
+    </div>
+    <div class="ai-actions">
+      <button class="chip" data-action="explain">Explain</button>
+      <button class="chip" data-action="fix">Fix error</button>
+      <button class="chip" data-action="improve">Improve</button>
+      <button class="chip" data-action="tests">Write tests</button>
+    </div>
+    <div id="chat" class="chat"></div>
+    <form id="chatForm" class="chat-form">
+      <textarea id="chatInput" rows="3" placeholder="Ask about your code. Ctrl+Enter to send."></textarea>
+      <button class="btn primary" type="submit">Send</button>
+    </form>
+  </aside>
+
+  <section class="bottom">
+    <div class="tabs bottom-tabs">
+      <button class="tab active" data-panel="output">Output</button>
+      <button class="tab" data-panel="preview">Preview</button>
+      <span class="grow"></span>
+      <button id="clearOutput" class="mini">Clear</button>
+    </div>
+    <div id="panel-output" class="panel">
+      <pre id="output" class="output"></pre>
+      <div class="inputs">
+        <input id="cmd" placeholder="Run a shell command in the current folder, e.g. npm install axios" spellcheck="false">
+        <button id="cmdRun" class="mini">Run command</button>
+        <input id="stdin" placeholder="Send input to the running program, then Enter" spellcheck="false">
+      </div>
+    </div>
+    <div id="panel-preview" class="panel hidden">
+      <div class="preview-bar">
+        <span id="previewUrl" class="muted">Start a web app (Run) or open an .html file, then preview it here.</span>
+        <button id="previewHtml" class="mini">Preview open HTML file</button>
+      </div>
+      <iframe id="frame" title="Preview" sandbox="allow-scripts allow-forms allow-popups"></iframe>
+    </div>
+  </section>
+
+  <footer class="status">
+    <span id="statusText">Ready</span>
+    <span class="grow"></span>
+    <span id="runtimes" class="muted"></span>
+  </footer>
+</div>
+
+<dialog id="settings">
+  <form method="dialog" class="dialog-body">
+    <h2>Settings</h2>
+    <p class="muted">The Groq API key is stored only on this computer, in <code>~/.config/vexos-devstudio/settings.json</code> (readable only by you). It is never shown again after saving.</p>
+    <label>Groq API key
+      <input id="groqKey" type="password" autocomplete="off" placeholder="gsk_...">
+    </label>
+    <p id="keyState" class="muted"></p>
+    <label>Model
+      <input id="model" autocomplete="off" placeholder="llama-3.3-70b-versatile">
+    </label>
+    <p class="muted">Get a key at <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a>. The default model is <code>llama-3.3-70b-versatile</code>.</p>
+    <div class="dialog-actions">
+      <button id="clearKey" class="btn danger" type="button">Remove key</button>
+      <span class="grow"></span>
+      <button class="btn" type="submit" value="cancel">Close</button>
+      <button id="saveSettings" class="btn primary" type="button">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/app.js"></script>
+</body>
+</html>
