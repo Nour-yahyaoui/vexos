@@ -21,7 +21,7 @@ for name in vexpad vexos-branding vexos-devstudio; do
 
     # Binary assets come from the desktop's assets/ folder, not from git.
     if [ "$name" = vexos-branding ]; then
-        install -Dm644 "$DISTRO/assets/vexos-logo-v2.png" "$dst/usr/share/pixmaps/vexos-logo.png"
+        install -Dm644 "$DISTRO/assets/vexos-logo-vex.png" "$dst/usr/share/pixmaps/vexos-logo.png"
         install -Dm644 "$DISTRO/assets/vexos-wallpaper-v3.jpg" "$dst/usr/share/backgrounds/vexos/vexos-wallpaper.jpg"
     fi
 

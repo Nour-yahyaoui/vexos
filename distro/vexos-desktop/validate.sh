@@ -28,7 +28,7 @@ for f in auto/config auto/build auto/clean \
          config/includes.chroot/etc/skel/Desktop/hello.py \
          config/includes.chroot/etc/skel/Desktop/about-vexos.html \
          config/includes.chroot/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
-         assets/vexos-logo-v2.png assets/vexos-wallpaper-v3.jpg; do
+         assets/vexos-logo-vex.png assets/vexos-wallpaper-v3.jpg; do
     if [ -f "$f" ]; then pass "exists: $f"; else bad "missing: $f"; fi
 done
 
