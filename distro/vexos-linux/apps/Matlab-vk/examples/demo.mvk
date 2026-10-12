@@ -1,0 +1,10 @@
+# Matlab-vk demo: run with  Matlab-vk demo.mvk
+sine   tone   5 1 500
+square clock  5 1 500
+add    tone clock mix
+show   mix
+stats  mix
+scale  tone 0.5 quiet
+delay  tone 50 late
+svg    mix /tmp/mix.svg
+list

@@ -33,6 +33,7 @@ vpk - VexOS package manager
   vpk list                 list installed packages
   vpk info NAME            show a package
   vpk install NAME...      install packages and their dependencies
+                           (also: vpk -S NAME, vpk -Set NAME)
   vpk remove NAME...       remove packages (refuses if another package needs them)
   vpk mkpkg DIR OUTDIR     build NAME-VERSION.vpk from a staging DIR with .vpk/control
   vpk mkindex DIR          write DIR/INDEX for every .vpk in DIR
@@ -216,7 +217,7 @@ case "${1:-help}" in
     search)  shift; cmd_search "$@" ;;
     list)    shift; cmd_list "$@" ;;
     info)    shift; cmd_info "$@" ;;
-    install) shift; cmd_install "$@" ;;
+    install|-S|-Set) shift; cmd_install "$@" ;;
     remove)  shift; cmd_remove "$@" ;;
     mkpkg)   shift; cmd_mkpkg "$@" ;;
     mkindex) shift; cmd_mkindex "$@" ;;

@@ -1,0 +1,365 @@
+#!/usr/bin/env python3
+"""Matlab-vk 1.0: a small signal calculator and plotter for VexOS.
+
+Create signals, combine them, look at them in the terminal, and save them
+as SVG files. Standard library only, so it runs on a base VexOS system.
+
+Usage:
+    Matlab-vk                 interactive session
+    Matlab-vk script.mvk      run the commands in a file, then exit
+    Matlab-vk --help          this text
+
+Every signal has N samples taken at a sample rate FS (samples per second),
+so its time axis runs from 0 to (N - 1) / FS seconds.
+"""
+import math
+import random
+import shlex
+import sys
+
+VERSION = "1.0"
+MAX_SAMPLES = 1_000_000
+DEFAULT_FS = 1000.0
+
+signals = {}  # NAME -> {"y": [floats], "fs": float}
+
+HELP = """\
+Matlab-vk commands (FS is optional and defaults to 1000):
+
+  sine   NAME FREQ AMP N [FS]     sine wave
+  cos    NAME FREQ AMP N [FS]     cosine wave
+  square NAME FREQ AMP N [FS]     square wave (+AMP / -AMP)
+  saw    NAME FREQ AMP N [FS]     sawtooth wave
+  tri    NAME FREQ AMP N [FS]     triangle wave
+  noise  NAME AMP N [FS]          random noise between -AMP and +AMP
+
+  add    A B OUT                  OUT = A + B (sample by sample)
+  sub    A B OUT                  OUT = A - B
+  mul    A B OUT                  OUT = A * B
+  scale  A K OUT                  OUT = K * A
+  delay  A K OUT                  OUT = A shifted later by K samples
+
+  show   NAME                     plot the signal in the terminal
+  svg    NAME FILE.svg            save a plot as an SVG file
+  stats  NAME                     length, duration, min, max, mean, RMS
+  list                            list all signals
+  rm     NAME                     delete a signal
+  help                            this text
+  quit                            leave (also: exit, Ctrl+D)
+
+Lines starting with # are comments. In script files, every line is run.
+"""
+
+
+# ---------------------------------------------------------------- helpers
+
+def number(text, name):
+    try:
+        return float(text)
+    except ValueError:
+        raise ValueError(f"{name} must be a number, got '{text}'")
+
+
+def count(text):
+    try:
+        n = int(text)
+    except ValueError:
+        raise ValueError(f"N must be a whole number, got '{text}'")
+    if n < 1 or n > MAX_SAMPLES:
+        raise ValueError(f"N must be between 1 and {MAX_SAMPLES}")
+    return n
+
+
+def get(name):
+    if name not in signals:
+        raise ValueError(f"no signal named '{name}' (try: list)")
+    return signals[name]
+
+
+def check_new_name(name):
+    if not name or not name.replace("_", "").replace("-", "").isalnum():
+        raise ValueError("names use letters, digits, '_' or '-'")
+
+
+def store(name, y, fs):
+    check_new_name(name)
+    signals[name] = {"y": y, "fs": fs}
+    print(f"{name}: {len(y)} samples at {fs:g} Hz")
+
+
+def wave(kind, freq, amp, n, fs):
+    """Build one periodic waveform. Phase is in cycles, so 0..1 per period."""
+    out = []
+    for k in range(n):
+        phase = (freq * k / fs) % 1.0
+        if kind == "sine":
+            v = math.sin(2 * math.pi * phase)
+        elif kind == "cos":
+            v = math.cos(2 * math.pi * phase)
+        elif kind == "square":
+            v = 1.0 if phase < 0.5 else -1.0
+        elif kind == "saw":
+            v = 2.0 * phase - 1.0
+        elif kind == "tri":
+            v = 4.0 * abs(phase - 0.5) - 1.0
+        else:
+            raise ValueError(f"unknown wave: {kind}")
+        out.append(amp * v)
+    return out
+
+
+def combine(a, b, op):
+    sa, sb = get(a), get(b)
+    if len(sa["y"]) != len(sb["y"]):
+        raise ValueError(f"{a} and {b} have different lengths")
+    if sa["fs"] != sb["fs"]:
+        raise ValueError(f"{a} and {b} have different sample rates")
+    ops = {"add": lambda x, y: x + y, "sub": lambda x, y: x - y, "mul": lambda x, y: x * y}
+    return [ops[op](x, y) for x, y in zip(sa["y"], sb["y"])], sa["fs"]
+
+
+# ---------------------------------------------------------------- output
+
+def ascii_plot(name, y, fs, width=70, height=16):
+    n = len(y)
+    cols = min(width, n)
+    if cols == 1:
+        picked = [y[0]]
+    else:
+        picked = [y[round(i * (n - 1) / (cols - 1))] for i in range(cols)]
+    lo, hi = min(y), max(y)
+    if hi == lo:
+        hi = lo + 1.0
+    grid = [[" "] * cols for _ in range(height)]
+    if lo < 0 < hi:
+        zero_row = round((hi - 0.0) / (hi - lo) * (height - 1))
+        for c in range(cols):
+            grid[zero_row][c] = "-"
+    for c, v in enumerate(picked):
+        r = round((hi - v) / (hi - lo) * (height - 1))
+        grid[r][c] = "*"
+    print(f"{name}  ({n} samples, {n / fs:g} s)")
+    for r, row in enumerate(grid):
+        label = f"{hi:>9.3g} |" if r == 0 else (f"{lo:>9.3g} |" if r == height - 1 else " " * 10 + "|")
+        print(label + "".join(row))
+    print(" " * 10 + "+" + "-" * cols)
+
+
+def write_svg(name, y, fs, path):
+    w, h, pad = 800, 300, 40
+    lo, hi = min(y), max(y)
+    if hi == lo:
+        hi = lo + 1.0
+    n = len(y)
+    pts = []
+    for k, v in enumerate(y):
+        x = pad + (w - 2 * pad) * (k / (n - 1) if n > 1 else 0.0)
+        py = pad + (h - 2 * pad) * (hi - v) / (hi - lo)
+        pts.append(f"{x:.2f},{py:.2f}")
+    zero = pad + (h - 2 * pad) * (hi - 0.0) / (hi - lo)
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}">',
+        '  <rect width="100%" height="100%" fill="#0b0a0f"/>',
+        f'  <text x="{pad}" y="24" fill="#f4eef0" font-family="sans-serif" font-size="16">'
+        f'{name}  ({n} samples, {fs:g} Hz)</text>',
+        f'  <line x1="{pad}" y1="{zero:.2f}" x2="{w - pad}" y2="{zero:.2f}" stroke="#555" stroke-dasharray="4 4"/>',
+        f'  <polyline points="{" ".join(pts)}" fill="none" stroke="#ff3b3b" stroke-width="1.5"/>',
+        f'  <text x="4" y="{pad + 4}" fill="#9b9196" font-size="11">{hi:.3g}</text>',
+        f'  <text x="4" y="{h - pad}" fill="#9b9196" font-size="11">{lo:.3g}</text>',
+        "</svg>",
+    ]
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"saved {path}")
+
+
+# ---------------------------------------------------------------- commands
+
+def cmd_wave(kind):
+    def run(args):
+        if len(args) not in (4, 5):
+            raise ValueError(f"usage: {kind} NAME FREQ AMP N [FS]")
+        name = args[0]
+        freq = number(args[1], "FREQ")
+        amp = number(args[2], "AMP")
+        n = count(args[3])
+        fs = number(args[4], "FS") if len(args) == 5 else DEFAULT_FS
+        if fs <= 0:
+            raise ValueError("FS must be positive")
+        check_new_name(name)
+        store(name, wave(kind, freq, amp, n, fs), fs)
+    return run
+
+
+def cmd_noise(args):
+    if len(args) not in (3, 4):
+        raise ValueError("usage: noise NAME AMP N [FS]")
+    name = args[0]
+    amp = number(args[1], "AMP")
+    n = count(args[2])
+    fs = number(args[3], "FS") if len(args) == 4 else DEFAULT_FS
+    check_new_name(name)
+    store(name, [amp * random.uniform(-1.0, 1.0) for _ in range(n)], fs)
+
+
+def cmd_binary(op):
+    def run(args):
+        if len(args) != 3:
+            raise ValueError(f"usage: {op} A B OUT")
+        y, fs = combine(args[0], args[1], op)
+        store(args[2], y, fs)
+    return run
+
+
+def cmd_scale(args):
+    if len(args) != 3:
+        raise ValueError("usage: scale A K OUT")
+    s = get(args[0])
+    k = number(args[1], "K")
+    store(args[2], [k * v for v in s["y"]], s["fs"])
+
+
+def cmd_delay(args):
+    if len(args) != 3:
+        raise ValueError("usage: delay A K OUT")
+    s = get(args[0])
+    try:
+        k = int(args[1])
+    except ValueError:
+        raise ValueError(f"K must be a whole number, got '{args[1]}'")
+    if k < 0:
+        raise ValueError("K must be 0 or more")
+    n = len(s["y"])
+    y = ([0.0] * min(k, n) + s["y"])[:n]
+    store(args[2], y, s["fs"])
+
+
+def cmd_show(args):
+    if len(args) != 1:
+        raise ValueError("usage: show NAME")
+    s = get(args[0])
+    ascii_plot(args[0], s["y"], s["fs"])
+
+
+def cmd_svg(args):
+    if len(args) != 2:
+        raise ValueError("usage: svg NAME FILE.svg")
+    s = get(args[0])
+    write_svg(args[0], s["y"], s["fs"], args[1])
+
+
+def cmd_stats(args):
+    if len(args) != 1:
+        raise ValueError("usage: stats NAME")
+    s = get(args[0])
+    y, fs = s["y"], s["fs"]
+    n = len(y)
+    mean = sum(y) / n
+    rms = math.sqrt(sum(v * v for v in y) / n)
+    print(f"{args[0]}: samples={n} fs={fs:g} Hz duration={n / fs:g} s")
+    print(f"  min={min(y):.6g} max={max(y):.6g} mean={mean:.6g} rms={rms:.6g}")
+
+
+def cmd_list(args):
+    if not signals:
+        print("no signals yet (try: sine s1 5 1 200)")
+    for name, s in signals.items():
+        print(f"{name:<16} {len(s['y']):>8} samples  {s['fs']:g} Hz")
+
+
+def cmd_rm(args):
+    if len(args) != 1:
+        raise ValueError("usage: rm NAME")
+    get(args[0])
+    del signals[args[0]]
+    print(f"removed {args[0]}")
+
+
+def cmd_help(args):
+    print(HELP, end="")
+
+
+COMMANDS = {
+    "sine": cmd_wave("sine"),
+    "cos": cmd_wave("cos"),
+    "square": cmd_wave("square"),
+    "saw": cmd_wave("saw"),
+    "tri": cmd_wave("tri"),
+    "noise": cmd_noise,
+    "add": cmd_binary("add"),
+    "sub": cmd_binary("sub"),
+    "mul": cmd_binary("mul"),
+    "scale": cmd_scale,
+    "delay": cmd_delay,
+    "show": cmd_show,
+    "svg": cmd_svg,
+    "stats": cmd_stats,
+    "list": cmd_list,
+    "rm": cmd_rm,
+    "help": cmd_help,
+}
+
+
+def run_line(line):
+    """Run one command line. Returns False when the session should end."""
+    line = line.strip()
+    if not line or line.startswith("#"):
+        return True
+    try:
+        parts = shlex.split(line)
+    except ValueError as e:
+        print(f"error: {e}")
+        return True
+    cmd, args = parts[0].lower(), parts[1:]
+    if cmd in ("quit", "exit"):
+        return False
+    handler = COMMANDS.get(cmd)
+    if handler is None:
+        print(f"unknown command: {cmd} (try: help)")
+        return True
+    try:
+        handler(args)
+    except ValueError as e:
+        print(f"error: {e}")
+    return True
+
+
+def interactive():
+    print(f"Matlab-vk {VERSION}. Type 'help' for commands, 'quit' to exit.")
+    while True:
+        try:
+            line = input("mvk> ")
+        except EOFError:
+            print()
+            break
+        except KeyboardInterrupt:
+            print()
+            continue
+        if not run_line(line):
+            break
+
+
+def main(argv):
+    if argv and argv[0] in ("-h", "--help"):
+        print(HELP, end="")
+        return 0
+    if argv and argv[0] in ("-V", "--version"):
+        print(f"Matlab-vk {VERSION}")
+        return 0
+    if argv:
+        try:
+            with open(argv[0], encoding="utf-8") as f:
+                lines = f.readlines()
+        except OSError as e:
+            print(f"Matlab-vk: {e}", file=sys.stderr)
+            return 1
+        for line in lines:
+            if not run_line(line):
+                break
+        return 0
+    interactive()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
