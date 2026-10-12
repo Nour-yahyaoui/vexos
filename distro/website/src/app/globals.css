@@ -152,7 +152,8 @@ li { margin: 0.25em 0; }
 .steps p { margin: 0; color: var(--muted); }
 
 /* Explanation split */
-.split { display: grid; gap: 36px; align-items: center; grid-template-columns: 1fr; }
+.split { display: grid; gap: 36px; align-items: center; grid-template-columns: minmax(0, 1fr); }
+.split > * { min-width: 0; }
 .shot { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); margin: 0; }
 .shot img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 .shot figcaption { padding: 12px 16px; color: var(--muted); font-size: 0.9rem; background: var(--card); }
@@ -178,7 +179,9 @@ tr:last-child td { border-bottom: 0; }
 .footer-title { font-weight: 700; margin: 0; }
 
 /* Docs */
-.docs-layout { display: grid; gap: 36px; padding: 48px 0 72px; grid-template-columns: 1fr; }
+.docs-layout { display: grid; gap: 36px; padding: 48px 0 72px; grid-template-columns: minmax(0, 1fr); }
+.docs-layout > * { min-width: 0; }
+pre { max-width: 100%; }
 .toc { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
 .toc h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--red-soft); }
 .toc ol { list-style: none; padding: 0; margin: 0; }
@@ -193,7 +196,7 @@ tr:last-child td { border-bottom: 0; }
 /* Responsive */
 @media (min-width: 720px) {
   .profile { grid-template-columns: auto 1fr; }
-  .split { grid-template-columns: 1fr 1fr; }
+  .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
   .section { padding: 96px 0; }
 }
@@ -202,9 +205,9 @@ tr:last-child td { border-bottom: 0; }
   .toc { position: sticky; top: 84px; }
 }
 @media (max-width: 720px) {
-  .bar-actions .btn { display: none; }
-  .nav-links { gap: 12px; }
-  .nav-links li:nth-child(n+4) { display: none; }
+  .hide-sm { display: none; }
+  .nav-links { gap: 14px; }
+  .bar-actions .btn-small { padding: 7px 10px; }
   .hero { padding: 56px 0 52px; }
   .hero-actions .btn { width: 100%; justify-content: center; }
 }

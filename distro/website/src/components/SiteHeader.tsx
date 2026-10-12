@@ -13,11 +13,11 @@ export default function SiteHeader() {
         </Link>
         <nav aria-label="Main">
           <ul className="nav-links">
-            <li><Link href="/#features">Features</Link></li>
-            <li><Link href="/#dev-tools">Dev tools</Link></li>
-            <li><Link href="/#get-started">Get started</Link></li>
+            <li className="hide-sm"><Link href="/#features">Features</Link></li>
+            <li className="hide-sm"><Link href="/#dev-tools">Dev tools</Link></li>
+            <li className="hide-sm"><Link href="/#get-started">Get started</Link></li>
             <li><Link href="/docs/">Docs</Link></li>
-            <li><Link href="/#about">About</Link></li>
+            <li className="hide-sm"><Link href="/#about">About</Link></li>
           </ul>
         </nav>
         <div className="bar-actions">
