@@ -5,7 +5,15 @@ set -e
 
 USER_NAME=vex
 USER_PASSWORD=vexos
-GROUPS=sudo,audio,cdrom,dip,floppy,video,plugdev,netdev,scanner,bluetooth,lpadmin
+# Only groups that exist in this image. bluetooth (bluez) and lpadmin (cups)
+# are not in the default package lists, so they are skipped instead of failing.
+WANT="sudo audio cdrom dip floppy video plugdev netdev scanner bluetooth lpadmin"
+GROUPS=""
+for g in $WANT; do
+    if getent group "$g" >/dev/null; then
+        GROUPS="${GROUPS:+$GROUPS,}$g"
+    fi
+done
 
 # live-config reads this to pick the live user name at boot.
 mkdir -p /etc/live/config.conf.d
