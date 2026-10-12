@@ -3,28 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VexOS Desktop - a clean Linux desktop built on Debian</title>
+  <title>VexOS Desktop: a clean Linux desktop built on Debian</title>
   <meta name="description" content="VexOS Desktop is a small, clean Linux desktop built on Debian. Runs in VirtualBox, with Python, Node.js, and Firefox ready to use.">
   <link rel="icon" href="assets/logo.png">
+  <script>
+    // Apply the saved or system theme before first paint, so there is no flash.
+    (function () {
+      try {
+        var t = localStorage.getItem("vexos-theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href="#top" aria-label="VexOS home">
+    <a class="brand" href="index.html" aria-label="VexOS home">
       <img src="assets/logo.png" alt="" width="36" height="36">
       <span>VexOS</span>
     </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
-      <span data-icon="menu"></span>
-    </button>
     <nav id="nav" class="site-nav" aria-label="Main">
       <a href="#features">Features</a>
+      <a href="docs.html">Docs</a>
+      <a href="docs.html#tutorials">Tutorials</a>
       <a href="#download">Download</a>
       <a href="#about">About</a>
       <a data-link="repo" href="#" target="_blank" rel="noopener">Source</a>
     </nav>
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch theme" title="Switch theme">
+        <span data-icon="sun"></span>
+      </button>
+      <button class="icon-btn menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <span data-icon="menu"></span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -38,6 +59,9 @@
         <div class="actions">
           <a class="btn btn-primary" data-link="download" href="#download" rel="noopener">
             <span data-icon="download"></span><span>Download ISO</span>
+          </a>
+          <a class="btn btn-ghost" href="docs.html">
+            <span data-icon="book"></span><span>Read the docs</span>
           </a>
           <a class="btn btn-ghost" data-link="repo" href="#" target="_blank" rel="noopener">
             <span data-icon="github"></span><span>View source</span>
@@ -69,6 +93,10 @@
         <a class="small-link" data-link="releases" href="#download" target="_blank" rel="noopener">All releases</a>
       </p>
       <ol class="steps" data-list="steps"></ol>
+      <p>
+        <a href="docs.html#virtualbox">Full VirtualBox guide</a>
+        &middot; <a href="docs.html#troubleshooting">Troubleshooting</a>
+      </p>
       <div class="requirements">
         <h3>Requirements</h3>
         <ul data-list="requirements"></ul>
@@ -76,7 +104,19 @@
     </div>
   </section>
 
-  <section id="about" class="section">
+  <section class="section">
+    <div class="wrap cta-band">
+      <div>
+        <h2>Learn VexOS</h2>
+        <p class="section-sub">Step-by-step tutorials for your first session, Python and Node.js, apt, and building the ISO yourself.</p>
+      </div>
+      <a class="btn btn-primary" href="docs.html#tutorials">
+        <span data-icon="play"></span><span>Open tutorials</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="about" class="section alt">
     <div class="wrap about">
       <div>
         <h2>About</h2>
@@ -96,7 +136,10 @@
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <span>&copy; <span data-text="year"></span> <span data-text="author"></span></span>
-    <a data-link="repo" href="#" target="_blank" rel="noopener">github</a>
+    <span>
+      <a href="docs.html">Docs</a> &middot;
+      <a data-link="repo" href="#" target="_blank" rel="noopener">GitHub</a>
+    </span>
   </div>
 </footer>
 

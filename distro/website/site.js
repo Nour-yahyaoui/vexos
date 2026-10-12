@@ -119,6 +119,47 @@
     });
   }
 
+  // Light/dark theme. The head script sets the first theme before paint; this
+  // handles the toggle button. A saved choice wins; otherwise the OS setting is followed.
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  }
+
+  function paintThemeToggle() {
+    var next = currentTheme() === "light" ? "dark" : "light";
+    document.querySelectorAll(".theme-toggle").forEach(function (btn) {
+      btn.setAttribute("aria-label", "Switch to " + next + " theme");
+      btn.setAttribute("title", "Switch to " + next + " theme");
+      var icon = btn.querySelector("[data-icon]");
+      if (icon) {
+        icon.setAttribute("data-icon", next === "light" ? "sun" : "moon");
+        window.VexIcons.render(btn);
+      }
+    });
+  }
+
+  function setupTheme() {
+    document.querySelectorAll(".theme-toggle").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var next = currentTheme() === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        try { localStorage.setItem("vexos-theme", next); } catch (e) { /* private mode: keep it for this page only */ }
+        paintThemeToggle();
+      });
+    });
+    // Follow the OS only while the visitor has not chosen a theme.
+    if (window.matchMedia) {
+      window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (ev) {
+        var saved = null;
+        try { saved = localStorage.getItem("vexos-theme"); } catch (e) { /* ignore */ }
+        if (saved) return;
+        document.documentElement.setAttribute("data-theme", ev.matches ? "light" : "dark");
+        paintThemeToggle();
+      });
+    }
+    paintThemeToggle();
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     fillText();
     fillLinks();
@@ -127,5 +168,6 @@
     renderList("requirements", REQUIREMENTS, "li");
     window.VexIcons.render(document);
     setupMenu();
+    setupTheme();
   });
 })();
