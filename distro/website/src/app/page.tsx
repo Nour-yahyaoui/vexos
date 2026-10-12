@@ -25,11 +25,6 @@ export const metadata: Metadata = {
 
 const features = [
   {
-    icon: Monitor,
-    title: "Full-screen desktop",
-    text: "Logs in at the largest resolution your VirtualBox display offers, so the desktop fills the window.",
-  },
-  {
     icon: Zap,
     title: "Smooth by default",
     text: "XFCE with the Xfwm compositor and vsync, a clean dark theme, and a dock pinned to your tools.",
