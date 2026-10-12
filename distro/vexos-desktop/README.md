@@ -11,7 +11,7 @@ A Debian-based live desktop that boots in VirtualBox (BIOS or EFI):
 - VexOS wallpaper, set as the default XFCE background
 - `vexpad`, the same terminal editor as VexOS Linux (`vexpad --help`)
 
-The live session user is `user` with password `live`, and has sudo.
+The live session user is `vex` with password `vexos`, and has sudo. Change the password with `passwd` after your first login.
 Anything you install or change is lost on reboot unless you install to disk.
 
 ## Profiles

@@ -1,0 +1,22 @@
+#!/bin/sh
+# Runs inside the live system during the build: creates the default user.
+# Name: vex   Password: vexos   (change the password after first login with: passwd)
+set -e
+
+USER_NAME=vex
+USER_PASSWORD=vexos
+GROUPS=sudo,audio,cdrom,dip,floppy,video,plugdev,netdev,scanner,bluetooth,lpadmin
+
+# live-config reads this to pick the live user name at boot.
+mkdir -p /etc/live/config.conf.d
+cat > /etc/live/config.conf.d/vexos.conf <<CONF
+LIVE_USERNAME="$USER_NAME"
+LIVE_USER_FULLNAME="VexOS User"
+LIVE_USER_DEFAULT_GROUPS="$GROUPS"
+CONF
+
+if ! id "$USER_NAME" >/dev/null 2>&1; then
+    useradd --create-home --shell /bin/bash --groups "$GROUPS" --comment "VexOS User" "$USER_NAME"
+fi
+echo "$USER_NAME:$USER_PASSWORD" | chpasswd
+usermod -aG "$GROUPS" "$USER_NAME"

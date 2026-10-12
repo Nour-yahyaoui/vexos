@@ -7,7 +7,7 @@ It ships as two projects:
 |---|---|---|
 | [`vexos-desktop`](vexos-desktop/) | **VexOS Desktop 1.0**: a Debian trixie live desktop (XFCE, Firefox ESR, Python 3, Node.js, git, apt). | Ready. Boots in VirtualBox. |
 | [`vexos-linux`](vexos-linux/) | **VexOS Linux 1.0**: a terminal-only system. BusyBox, bash, and the `vpk` package manager, in one initramfs. | Working. Kernel build is untested. |
-| [`website`](website/) | The landing page: mobile-responsive, with a download button. | Static HTML, no build step. |
+| [`website`](website/) | The landing page and documentation: Next.js, SEO-optimized, light and dark themes, with a download button. | Static export with `npm run build`. |
 
 ## Download
 
@@ -21,7 +21,7 @@ Get the latest ISO from the **[Releases page](https://github.com/Nour-yahyaoui/v
 2. Create a VM: Type *Linux*, Version *Debian (64-bit)*, 4 GB RAM, 2 CPUs.
 3. Attach the ISO to the optical drive and start the VM.
 4. Set **Display → Graphics Controller: VMSVGA**, **Video Memory: 128 MB**, so the desktop fills the window.
-5. Log in as `user` / `live`. Firefox, a terminal, Python 3, and Node.js are installed.
+5. Log in as `vex` / `vexos`. Firefox, a terminal, Python 3, and Node.js are installed.
 
 Changes made in the live session are lost on reboot.
 
@@ -50,7 +50,7 @@ distro/
 ├── README.md          this file
 ├── vexos-desktop/     Debian live ISO (live-build)
 ├── vexos-linux/       BusyBox initramfs ISO, vpk package manager
-└── website/           landing page (index.html, styles.css, site.js, icons.js)
+└── website/           landing page and docs (Next.js app; see website/README.md)
 ```
 
 The rest of the repository is the Linux kernel source. The VexOS builds use it.

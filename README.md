@@ -10,7 +10,7 @@ VexOS is a small Linux distribution built on the Linux kernel source in this rep
 |---|---|
 | [`distro/vexos-desktop`](distro/vexos-desktop/) | **VexOS Desktop 1.0**: a Debian trixie live desktop with XFCE, Firefox ESR, Python 3, Node.js, git, and apt. Boots in VirtualBox. |
 | [`distro/vexos-linux`](distro/vexos-linux/) | **VexOS Linux 1.0**: a terminal-only system built on this kernel, with BusyBox, bash, and the `vpk` package manager. |
-| [`distro/website`](distro/website/) | The landing page. Mobile-responsive, static HTML, no build step. |
+| [`distro/website`](distro/website/) | The landing page and docs: a Next.js app with SEO, light and dark themes, and a static export (`npm run build`). |
 | `arch/`, `drivers/`, `fs/`, `kernel/`, … | The Linux kernel source. The VexOS builds compile it. |
 
 See [`distro/README.md`](distro/README.md) for an overview of the VexOS projects.
@@ -21,7 +21,7 @@ See [`distro/README.md`](distro/README.md) for an overview of the VexOS projects
 2. Create a VM: Type *Linux*, Version *Debian (64-bit)*, 4 GB RAM, 2 CPUs.
 3. Attach the ISO to the optical drive and start the VM.
 4. Set **Display → Graphics Controller: VMSVGA** and **Video Memory: 128 MB** so the desktop fills the window.
-5. Log in as `user` / `live`.
+5. Log in as `vex` / `vexos`.
 
 Changes made in the live session are lost on reboot.
 
