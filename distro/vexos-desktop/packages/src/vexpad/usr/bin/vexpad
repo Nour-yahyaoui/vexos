@@ -2,12 +2,53 @@
 # vexpad - the VexOS terminal text editor (v1).
 # v1 ships BusyBox vi as the engine; vexpad adds a friendly wrapper.
 
-case "${1:-}" in
-    -h|--help)
-        cat <<'EOF'
-vexpad - terminal text editor for VexOS
+show_about() {
+    os=$(. /etc/os-release 2>/dev/null; echo "${PRETTY_NAME:-Debian}")
+    kernel=$(uname -r)
+    cpu=$(awk -F': ' '/model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null)
+    [ -n "$cpu" ] || cpu="unknown"
+    cores=$(nproc 2>/dev/null || echo "?")
+    mem=$(awk '/MemTotal/ {printf "%.1f GB", $2/1024/1024}' /proc/meminfo 2>/dev/null)
+    [ -n "$mem" ] || mem="unknown"
+    disk=$(df -h / 2>/dev/null | awk 'NR==2 {print $2 " total, " $4 " free"}')
+    up=$(uptime -p 2>/dev/null || echo "unknown")
+    user_name=${USER:-$(id -un)}
 
-Usage: vexpad [FILE ...]
+    cat <<EOT
+
+  VexOS Desktop 1.0
+  =================
+
+  About me
+  --------
+  VexOS is made by Nour-yahyaoui, a developer who wanted a clean,
+  modern Linux desktop for web development.
+  GitHub: https://github.com/Nour-yahyaoui
+  Source: https://github.com/Nour-yahyaoui/vexos
+
+  This system
+  -----------
+  User:      $user_name
+  OS:        $os
+  Kernel:    $kernel
+  CPU:       $cpu
+  Cores:     $cores
+  Memory:    $mem
+  Disk (/):  ${disk:-unknown}
+  Uptime:    $up
+
+  Commands
+  --------
+  vexpad FILE        open a file in the editor
+  vexpad --guide     the editor cheat sheet
+  vexpad --help      this page
+
+EOT
+}
+
+show_guide() {
+    cat <<'EOT'
+vexpad - terminal text editor for VexOS
 
 Quick guide (modal editor, like vi):
   i          insert text before cursor   (Esc to stop typing)
@@ -19,9 +60,12 @@ Quick guide (modal editor, like vi):
   :wq        save and quit   :q!  quit without saving
   :set nu    show line numbers
   u          undo
-EOF
-        exit 0
-        ;;
+EOT
+}
+
+case "${1:-}" in
+    -h|--help) show_about; exit 0 ;;
+    --guide)   show_guide; exit 0 ;;
 esac
 
 if [ $# -eq 0 ]; then

@@ -2,56 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About VexOS Desktop</title>
   <style>
+    :root { --red: #ff3b3b; --bg: #07060a; --card: rgba(23,19,26,.72); --text: #f4eef0; --muted: #9b9196; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
     body {
-      font-family: sans-serif;
-      background: #0b0a0f;
-      color: #f2e8ea;
-      margin: 0;
-      padding: 3em 1em;
-      text-align: center;
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 80% -10%, rgba(255,59,59,.22), transparent 60%),
+        radial-gradient(700px 500px at -10% 110%, rgba(120,70,255,.18), transparent 60%),
+        var(--bg);
+      display: grid; place-items: center; padding: 48px 20px;
+      animation: fade .6s ease-out both;
     }
-    img.logo { width: 180px; height: 180px; filter: drop-shadow(0 0 18px #ff1a1a); }
-    h1 { color: #ff3b3b; letter-spacing: .08em; margin: .4em 0 .1em; }
-    .tag { color: #9a8f93; margin-bottom: 2em; }
+    @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    main { width: min(760px, 100%); text-align: center; }
+    .logo { width: 132px; height: 132px; animation: float 6s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(255,59,59,.55)); }
+    h1 { margin: 18px 0 4px; font-size: clamp(28px, 5vw, 40px); letter-spacing: .06em; color: var(--red); }
+    .tag { color: var(--muted); margin-bottom: 28px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); text-align: left; }
     .card {
-      max-width: 520px;
-      margin: 0 auto;
-      background: #17131a;
-      border: 1px solid #3a1b1f;
-      border-radius: 12px;
-      padding: 1.5em;
-      text-align: left;
+      background: var(--card); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,59,59,.18); border-radius: 16px; padding: 20px 22px;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
     }
-    .card dt { color: #ff3b3b; font-weight: bold; margin-top: .8em; }
-    .card dd { margin: .2em 0 0 0; }
-    a { color: #ff6b6b; }
-    code { background: #241d24; padding: .1em .4em; border-radius: 4px; }
+    .card:hover { transform: translateY(-3px); border-color: rgba(255,59,59,.5); box-shadow: 0 10px 30px rgba(255,59,59,.12); }
+    .card h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .14em; color: var(--red); }
+    .card p, .card li { margin: 0 0 8px; color: var(--text); line-height: 1.5; font-size: 15px; }
+    .card ul { margin: 0; padding-left: 18px; }
+    .kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+    .kv dt { color: var(--muted); }
+    .kv dd { margin: 0; font-family: "JetBrains Mono", ui-monospace, monospace; }
+    a { color: #ff7a7a; text-decoration: none; border-bottom: 1px solid rgba(255,122,122,.4); }
+    a:hover { color: #fff; border-color: #fff; }
+    code { background: #1f1a22; padding: .15em .45em; border-radius: 6px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; }
+    .btn { display: inline-block; margin-top: 8px; padding: 10px 16px; border-radius: 10px; background: linear-gradient(135deg, #ff3b3b, #a40f2c); color: #fff; border: none; font-weight: 600; }
+    .btn:hover { color: #fff; border: none; filter: brightness(1.1); }
+    footer { margin-top: 26px; color: var(--muted); font-size: 13px; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
   </style>
 </head>
 <body>
-  <img class="logo" src="file:///usr/share/pixmaps/vexos-logo.png" alt="VexOS logo">
-  <h1>VexOS Desktop</h1>
-  <div class="tag">Version 1.0 · Debian trixie based</div>
+  <main>
+    <img class="logo" src="file:///usr/share/pixmaps/vexos-logo.png" alt="VexOS logo">
+    <h1>VexOS Desktop</h1>
+    <div class="tag">Version 1.0 · Debian trixie based</div>
 
-  <div class="card">
-    <dl>
-      <dt>Created by</dt>
-      <dd>Nour-yahyaoui</dd>
+    <div class="grid">
+      <section class="card">
+        <h2>About me</h2>
+        <p>VexOS is built by <strong>Nour-yahyaoui</strong>, a developer who wanted a clean, modern Linux desktop for web development, with C, Python, Node.js, React, Next.js, and Rust ready out of the box.</p>
+        <a class="btn" href="https://github.com/Nour-yahyaoui">GitHub profile</a>
+        <a class="btn" href="https://github.com/Nour-yahyaoui/vexos" style="background:none;border:1px solid rgba(255,59,59,.5)">Source code</a>
+      </section>
 
-      <dt>Project</dt>
-      <dd>vexos</dd>
+      <section class="card">
+        <h2>This system</h2>
+        <dl class="kv">
+          <dt>Edition</dt><dd>VexOS Desktop 1.0</dd>
+          <dt>Base</dt><dd>Debian trixie</dd>
+          <dt>Desktop</dt><dd>XFCE, Plank dock</dd>
+          <dt>Browser</dt><dd>Firefox ESR</dd>
+          <dt>Dev tools</dt><dd>gcc, Python 3, Node.js, Rust</dd>
+          <dt>IDE</dt><dd>VexOS DevStudio</dd>
+        </dl>
+      </section>
 
-      <dt>Source code</dt>
-      <dd><a href="https://github.com/Nour-yahyaoui/vexos">github.com/Nour-yahyaoui/vexos</a></dd>
+      <section class="card">
+        <h2>Get started</h2>
+        <ul>
+          <li>Open <strong>VexOS DevStudio</strong> from the dock to write and run code.</li>
+          <li>Open a terminal and type <code>vexpad --help</code> for system info and the editor guide.</li>
+          <li>Run <code>vexpad --guide</code> for the full editor cheat sheet.</li>
+        </ul>
+      </section>
+    </div>
 
-      <dt>Built with</dt>
-      <dd>Debian live-build, XFCE, Firefox ESR, Python 3, Node.js</dd>
-
-      <dt>Tip</dt>
-      <dd>Open a terminal and type <code>vexpad --help</code> for the editor guide.</dd>
-    </dl>
-  </div>
+    <footer>Made by Nour-yahyaoui</footer>
+  </main>
 </body>
 </html>

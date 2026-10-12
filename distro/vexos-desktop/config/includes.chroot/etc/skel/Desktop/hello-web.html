@@ -1,17 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hello from VexOS Desktop</title>
   <style>
-    body { font-family: sans-serif; background: #1e1b2e; color: #f3eeff; text-align: center; padding: 3em; }
-    button { font-size: 1.1em; padding: .5em 1.2em; border-radius: 8px; border: none; background: #8b5cf6; color: white; cursor: pointer; }
+    :root { --red: #ff3b3b; --bg: #07060a; --text: #f4eef0; --muted: #9b9196; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px;
+      font-family: Inter, "Segoe UI", system-ui, sans-serif; color: var(--text);
+      background: radial-gradient(800px 480px at 50% -20%, rgba(255,59,59,.25), transparent 60%), var(--bg);
+    }
+    main { width: min(520px, 100%); text-align: center; animation: rise .6s ease-out both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    h1 { color: var(--red); letter-spacing: .04em; margin: 0 0 6px; }
+    p { color: var(--muted); line-height: 1.5; }
+    .panel { margin: 24px 0; padding: 22px; border-radius: 16px; background: rgba(23,19,26,.72); border: 1px solid rgba(255,59,59,.18); }
+    .clock { font: 600 44px "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; }
+    button {
+      font: 600 16px Inter, system-ui, sans-serif; padding: 12px 22px; border: none; border-radius: 12px; cursor: pointer; color: #fff;
+      background: linear-gradient(135deg, #ff3b3b, #a40f2c); transition: transform .15s ease, filter .15s ease;
+    }
+    button:hover { filter: brightness(1.1); }
+    button:active { transform: scale(.97); }
+    #out { min-height: 1.5em; margin-top: 14px; color: #ff9a9a; }
+    .meta { font-size: 13px; color: var(--muted); margin-top: 18px; }
+    code { background: #1f1a22; padding: .1em .4em; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <h1>Hello from VexOS Desktop</h1>
-  <p>This page runs JavaScript in Firefox.</p>
-  <p><button onclick="document.getElementById('out').textContent = 'Clicked at ' + new Date().toLocaleTimeString()">Click me</button></p>
-  <p id="out"></p>
+  <main>
+    <h1>Hello from VexOS Desktop</h1>
+    <p>This page runs JavaScript in Firefox. Edit it with <code>vexpad hello-web.html</code> or open it in DevStudio.</p>
+
+    <div class="panel">
+      <div class="clock" id="clock">--:--:--</div>
+      <p><button id="btn">Click me</button></p>
+      <div id="out"></div>
+    </div>
+
+    <p class="meta" id="meta"></p>
+  </main>
+
+  <script>
+    const clock = document.getElementById('clock');
+    const tick = () => clock.textContent = new Date().toLocaleTimeString();
+    tick(); setInterval(tick, 1000);
+
+    let clicks = 0;
+    document.getElementById('btn').addEventListener('click', () => {
+      clicks += 1;
+      document.getElementById('out').textContent =
+        `Clicked ${clicks} time${clicks === 1 ? '' : 's'} at ${new Date().toLocaleTimeString()}`;
+    });
+
+    document.getElementById('meta').textContent =
+      `Browser: ${navigator.userAgent.includes('Firefox') ? 'Firefox' : 'other'} · Language: ${navigator.language}`;
+  </script>
 </body>
 </html>
