@@ -7,9 +7,17 @@ A Debian-based live desktop that boots in VirtualBox (BIOS or EFI):
 - Python 3 (with pip and venv), Node.js and npm
 - Full apt package manager (Debian mirrors), git, build-essential
 - VirtualBox guest tools for clipboard and screen resizing
+- VexOS wallpaper, set as the default XFCE background
+- `vexpad`, the same terminal editor as VexOS Linux (`vexpad --help`)
 
 The live session user is `user` with password `live`, and has sudo.
 Anything you install or change is lost on reboot unless you install to disk.
+
+## Check before building
+
+```sh
+sh validate.sh      # checks files, scripts, package list, wallpaper; no build
+```
 
 ## Build (on a Debian or Ubuntu machine, not in the sandbox)
 
