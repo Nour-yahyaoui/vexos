@@ -1,0 +1,225 @@
+#!/bin/sh
+# vpk - VexOS package manager (v1).
+#
+# A package is a gzipped tar archive named NAME-VERSION.vpk. It holds the files
+# to install (paths relative to /) plus a .vpk/control file:
+#     Name: hello
+#     Version: 1.0-1
+#     Depends: bash
+#     Description: one line
+#
+# A repository is a directory or URL with an INDEX file (see `vpk mkindex`).
+# Sources are listed one per line in /etc/vpk/sources.list.
+#
+# VPK_ROOT=DIR points vpk at another root (for testing); empty means the real system.
+set -eu
+
+ROOT=${VPK_ROOT:-}
+DBDIR=$ROOT/var/lib/vpk
+LISTS=$DBDIR/lists
+CACHE=$ROOT/var/cache/vpk
+SOURCES=${VPK_SOURCES:-$ROOT/etc/vpk/sources.list}
+TARGET=${ROOT:-/}
+
+die() { echo "vpk: $*" >&2; exit 1; }
+say() { echo "vpk: $*"; }
+
+usage() {
+cat <<'USAGE'
+vpk - VexOS package manager
+
+  vpk update               refresh package lists from the sources
+  vpk search WORD          search available packages
+  vpk list                 list installed packages
+  vpk info NAME            show a package
+  vpk install NAME...      install packages and their dependencies
+  vpk remove NAME...       remove packages (refuses if another package needs them)
+  vpk mkpkg DIR OUTDIR     build NAME-VERSION.vpk from a staging DIR with .vpk/control
+  vpk mkindex DIR          write DIR/INDEX for every .vpk in DIR
+USAGE
+}
+
+# Fetch a URL or local path to DEST (http, https, file://, or plain path).
+fetch() {
+    case "$1" in
+        http://*|https://*)
+            if command -v wget >/dev/null 2>&1; then wget -q -O "$2" "$1"
+            else curl -fsSL -o "$2" "$1"; fi ;;
+        file://*) cp "${1#file://}" "$2" ;;
+        *) cp "$1" "$2" ;;
+    esac
+}
+
+# Index line: name|version|depends|sha256|file|description|base
+lookup() {
+    cat "$LISTS"/*.idx 2>/dev/null | awk -F'|' -v n="$1" '$1 == n { print; exit }'
+}
+
+installed() { [ -d "$DBDIR/installed/$1" ]; }
+
+cmd_update() {
+    [ -f "$SOURCES" ] || die "no sources file: $SOURCES"
+    mkdir -p "$LISTS" "$CACHE"
+    rm -f "$LISTS"/*.idx
+    n=0
+    while IFS= read -r src; do
+        case "$src" in ''|\#*) continue ;; esac
+        base=${src%/}
+        n=$((n + 1))
+        tmp=$CACHE/INDEX.$n
+        fetch "$base/INDEX" "$tmp" || die "cannot fetch $base/INDEX"
+        # Append the base URL to every entry so install knows where to download from.
+        while IFS= read -r line; do
+            [ -n "$line" ] && echo "$line|$base"
+        done < "$tmp" > "$LISTS/source$n.idx"
+        rm -f "$tmp"
+        say "updated source $n: $base ($(wc -l < "$LISTS/source$n.idx") packages)"
+    done < "$SOURCES"
+}
+
+cmd_search() {
+    [ $# -eq 1 ] || die "usage: vpk search WORD"
+    cat "$LISTS"/*.idx 2>/dev/null | awk -F'|' -v w="$1" \
+        'index(tolower($1 " " $6), tolower(w)) { printf "%-16s %-12s %s\n", $1, $2, $6 }'
+}
+
+cmd_list() {
+    [ -d "$DBDIR/installed" ] || return 0
+    for d in "$DBDIR"/installed/*; do
+        [ -f "$d/entry" ] || continue
+        awk -F'|' '{ printf "%-16s %s\n", $1, $2 }' "$d/entry"
+    done
+}
+
+cmd_info() {
+    [ $# -eq 1 ] || die "usage: vpk info NAME"
+    line=$(lookup "$1" || true)
+    if [ -z "$line" ] && [ -f "$DBDIR/installed/$1/entry" ]; then
+        line=$(cat "$DBDIR/installed/$1/entry")
+    fi
+    [ -n "$line" ] || die "unknown package: $1"
+    echo "$line" | awk -F'|' '{ printf "Name: %s\nVersion: %s\nDepends: %s\nDescription: %s\nFrom: %s\n", $1, $2, $3, $6, $7 }'
+}
+
+# Dependency resolution: dependencies first, then the package. Cycles are skipped.
+resolve() {
+    case " $SEEN " in *" $1 "*) return 0 ;; esac
+    SEEN="$SEEN $1"
+    installed "$1" && return 0
+    line=$(lookup "$1" || true)
+    [ -n "$line" ] || die "unknown package: $1"
+    deps=$(echo "$line" | awk -F'|' '{ print $3 }')
+    for d in $deps; do resolve "$d"; done
+    TODO="$TODO $1"
+}
+
+cmd_install() {
+    [ $# -ge 1 ] || die "usage: vpk install NAME..."
+    [ -n "$ROOT" ] || [ "$(id -u)" = 0 ] || die "install needs root"
+    mkdir -p "$CACHE" "$DBDIR/installed"
+    SEEN=""; TODO=""
+    for p in "$@"; do resolve "$p"; done
+    if [ -z "$TODO" ]; then say "nothing to do"; return 0; fi
+    say "will install:$TODO"
+
+    # Pass 1: download and verify everything before touching the system.
+    for p in $TODO; do
+        line=$(lookup "$p")
+        file=$(echo "$line" | awk -F'|' '{ print $5 }')
+        sha=$(echo "$line" | awk -F'|' '{ print $4 }')
+        base=$(echo "$line" | awk -F'|' '{ print $7 }')
+        pkg=$CACHE/$file
+        fetch "$base/$file" "$pkg" || die "download failed: $file (nothing installed)"
+        got=$(sha256sum "$pkg" | cut -d' ' -f1)
+        [ "$got" = "$sha" ] || die "checksum mismatch for $file (nothing installed; expected $sha, got $got)"
+    done
+
+    # Pass 2: install the verified packages in dependency order.
+    for p in $TODO; do
+        line=$(lookup "$p")
+        name=$(echo "$line" | awk -F'|' '{ print $1 }')
+        ver=$(echo "$line" | awk -F'|' '{ print $2 }')
+        file=$(echo "$line" | awk -F'|' '{ print $5 }')
+        pkg=$CACHE/$file
+
+        stage=$(mktemp -d)
+        tar -xzf "$pkg" -C "$stage"
+        mkdir -p "$DBDIR/installed/$name"
+        echo "$line" > "$DBDIR/installed/$name/entry"
+        (cd "$stage" && find . \( -type f -o -type l \) ! -path './.vpk/*' | sed 's|^\./||') \
+            > "$DBDIR/installed/$name/files"
+        rm -rf "$stage/.vpk"
+        cp -a "$stage/." "$TARGET/"
+        rm -rf "$stage"
+        say "installed $name $ver"
+    done
+}
+
+cmd_remove() {
+    [ $# -ge 1 ] || die "usage: vpk remove NAME..."
+    [ -n "$ROOT" ] || [ "$(id -u)" = 0 ] || die "remove needs root"
+    for p in "$@"; do
+        installed "$p" || die "not installed: $p"
+        for d in "$DBDIR"/installed/*; do
+            other=$(basename "$d")
+            [ "$other" = "$p" ] && continue
+            [ -f "$d/entry" ] || continue
+            deps=$(awk -F'|' '{ print $3 }' "$d/entry")
+            case " $deps " in *" $p "*) die "$other depends on $p; remove $other first" ;; esac
+        done
+    done
+    for p in "$@"; do
+        while IFS= read -r f; do
+            [ -n "$f" ] && rm -f "$TARGET/$f"
+        done < "$DBDIR/installed/$p/files"
+        rm -rf "$DBDIR/installed/$p"
+        say "removed $p"
+    done
+}
+
+# Read one field from a control file, e.g. control_field Name FILE.
+control_field() { sed -n "s/^$1: *//p" "$2" | head -1; }
+
+cmd_mkpkg() {
+    [ $# -eq 2 ] || die "usage: vpk mkpkg DIR OUTDIR"
+    src=$1; out=$2
+    [ -f "$src/.vpk/control" ] || die "missing $src/.vpk/control"
+    name=$(control_field Name "$src/.vpk/control")
+    ver=$(control_field Version "$src/.vpk/control")
+    [ -n "$name" ] && [ -n "$ver" ] || die "control needs Name and Version"
+    mkdir -p "$out"
+    (cd "$src" && tar -czf "$out/$name-$ver.vpk" .)
+    say "built $out/$name-$ver.vpk"
+}
+
+cmd_mkindex() {
+    [ $# -eq 1 ] || die "usage: vpk mkindex DIR"
+    dir=$1
+    : > "$dir/INDEX"
+    for pkg in "$dir"/*.vpk; do
+        [ -f "$pkg" ] || continue
+        stage=$(mktemp -d)
+        tar -xzf "$pkg" -C "$stage" ./.vpk/control
+        name=$(control_field Name "$stage/.vpk/control")
+        ver=$(control_field Version "$stage/.vpk/control")
+        deps=$(control_field Depends "$stage/.vpk/control")
+        desc=$(control_field Description "$stage/.vpk/control")
+        rm -rf "$stage"
+        sha=$(sha256sum "$pkg" | cut -d' ' -f1)
+        echo "$name|$ver|$deps|$sha|$(basename "$pkg")|$desc" >> "$dir/INDEX"
+    done
+    say "wrote $dir/INDEX ($(wc -l < "$dir/INDEX") packages)"
+}
+
+case "${1:-help}" in
+    update)  shift; cmd_update "$@" ;;
+    search)  shift; cmd_search "$@" ;;
+    list)    shift; cmd_list "$@" ;;
+    info)    shift; cmd_info "$@" ;;
+    install) shift; cmd_install "$@" ;;
+    remove)  shift; cmd_remove "$@" ;;
+    mkpkg)   shift; cmd_mkpkg "$@" ;;
+    mkindex) shift; cmd_mkindex "$@" ;;
+    help|-h|--help) usage ;;
+    *) usage >&2; exit 1 ;;
+esac

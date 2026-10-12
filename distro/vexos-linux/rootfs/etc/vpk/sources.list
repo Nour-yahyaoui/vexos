@@ -1,0 +1,4 @@
+# Package sources for vpk, one per line (a URL or a local directory).
+# Each source must contain an INDEX file. Run `vpk update` after editing.
+# Example:
+# https://example.com/vexos/repo

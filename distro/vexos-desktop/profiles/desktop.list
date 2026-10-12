@@ -1,0 +1,16 @@
+# desktop: XFCE, login manager, browser
+xfce4
+xfce4-terminal
+xfce4-goodies
+lightdm
+xserver-xorg
+xserver-xorg-video-all
+fonts-dejavu-core
+network-manager
+network-manager-gnome
+firefox-esr
+# look and feel: dark theme, modern icons and font, dock
+arc-theme
+papirus-icon-theme
+fonts-inter
+plank

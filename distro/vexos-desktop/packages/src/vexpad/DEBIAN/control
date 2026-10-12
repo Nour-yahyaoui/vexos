@@ -1,0 +1,10 @@
+Package: vexpad
+Version: 1.0-1
+Section: editors
+Priority: optional
+Architecture: all
+Maintainer: Nour-yahyaoui <https://github.com/Nour-yahyaoui>
+Depends: vim-tiny | vim | nvi
+Description: VexOS terminal text editor
+ vexpad is a small terminal editor with a built-in cheat sheet
+ (vexpad --help). It runs vi underneath.

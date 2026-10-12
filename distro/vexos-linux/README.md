@@ -12,8 +12,19 @@ in this repository, plus BusyBox for userland.
 - Run scripts: `sh script.sh`, or `chmod +x` and `./script.sh`.
 - Networking: DHCP on the first NIC (VirtualBox's default E1000 or virtio).
 
-Not in 1.0 (planned for 1.1): Python, bash, and a package manager. Python
-cannot be installed inside 1.0 yet, so run scripts with `sh` for now.
+Added in this build:
+- **bash** (GNU bash 5.3, static, built from source) is the login shell.
+- **vpk**, a package manager for VexOS Linux:
+  ```sh
+  vpk update               # refresh package lists from /etc/vpk/sources.list
+  vpk search WORD          # find packages
+  vpk install NAME...      # installs dependencies too; verifies checksums first
+  vpk remove NAME...       # refuses if another package needs it
+  vpk list
+  ```
+
+Not yet: Python (planned as the next big build). Packages come from a repository
+you host (see below); the default source list is empty until you add one.
 
 ## Build
 
@@ -23,10 +34,13 @@ Build on a Linux machine (Debian/Ubuntu example):
 sudo apt install build-essential flex bison bc libelf-dev libssl-dev \
      busybox-static grub-pc-bin grub-efi-amd64-bin grub-common xorriso mtools
 cd distro/vexos-linux
-./build.sh          # kernel + rootfs + ISO -> out/vexos-linux-1.0.iso
+./build.sh bash       # static bash from source (needs internet, ~5 min)
+./build.sh          # bash + kernel + rootfs + ISO -> out/vexos-linux-1.0.iso
+./build.sh repo     # package bash as a vpk repository in out/repo/
 ```
 
-Targets: `./build.sh kernel | rootfs | iso | clean`.
+Targets: `./build.sh bash | kernel | rootfs | iso | repo | clean`.
+To reuse an existing bash binary: `BASH_STATIC=/path/to/bash ./build.sh bash`.
 The kernel is built from the repository root (the kernel source), using
 `kernel/vexos.config` as a fragment on top of `defconfig`.
 
@@ -36,6 +50,11 @@ The kernel is built from the repository root (the kernel source), using
 2. Storage: attach `out/vexos-linux-1.0.iso` to the optical drive.
 3. (Optional) System > Enable EFI for UEFI boot.
 4. Start the VM. You get a `vexos:~$` prompt.
+
+## Hosting packages
+
+`./build.sh repo` writes `out/repo/` with an `INDEX` and the `.vpk` packages. Upload that folder
+to any web server (or GitHub Pages), then add its URL to `/etc/vpk/sources.list` on the VM and run `vpk update`.
 
 ## Layout
 
@@ -49,6 +68,8 @@ rootfs/                files copied into the system
   etc/init.d/rcS       startup (hostname, network, banner)
   etc/profile          shell environment and prompt
   usr/bin/vexpad       editor wrapper
+  etc/vpk/sources.list package sources for vpk
+vpk/vpk                package manager (POSIX sh, runs on BusyBox)
 ```
 
 ## Notes

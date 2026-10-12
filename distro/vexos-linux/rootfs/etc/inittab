@@ -1,6 +1,6 @@
 # VexOS Linux inittab (BusyBox init)
 ::sysinit:/etc/init.d/rcS
-tty1::respawn:/bin/sh -l
-ttyS0::respawn:/bin/sh -l
+tty1::respawn:/bin/bash -l
+ttyS0::respawn:/bin/bash -l
 ::ctrlaltdel:/sbin/reboot
 ::shutdown:/etc/init.d/rcK

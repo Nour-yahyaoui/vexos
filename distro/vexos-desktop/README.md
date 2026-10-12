@@ -6,12 +6,42 @@ A Debian-based live desktop that boots in VirtualBox (BIOS or EFI):
 - Firefox ESR for HTML and JavaScript
 - Python 3 (with pip and venv), Node.js and npm
 - Full apt package manager (Debian mirrors), git, build-essential
-- VirtualBox guest tools for clipboard and screen resizing
+- Screen size: set the VM to VMSVGA with 128 MB video memory (no guest tools yet, so no clipboard sharing)
 - VexOS wallpaper, set as the default XFCE background
 - `vexpad`, the same terminal editor as VexOS Linux (`vexpad --help`)
 
 The live session user is `user` with password `live`, and has sudo.
 Anything you install or change is lost on reboot unless you install to disk.
+
+## Profiles
+
+Pick what goes into the image with `VEXOS_PROFILE` (default `desktop`):
+
+```sh
+sudo VEXOS_PROFILE=minimal sh auto/config    # terminal only, 11 packages
+sudo VEXOS_PROFILE=desktop sh auto/config    # XFCE + Firefox ESR (default)
+sudo VEXOS_PROFILE=dev sh auto/config        # desktop + compilers and Node.js
+```
+
+Profiles are plain lists in `profiles/` (`base.list`, `desktop.list`, `dev.list`).
+Edit those files, not the generated `config/package-lists/vexos.list.chroot`.
+
+## VexOS packages
+
+Custom packages live in `packages/src/`:
+
+- `vexpad`: the terminal editor (`/usr/bin/vexpad`).
+- `vexos-branding`: logo and wallpaper.
+
+`auto/config` builds them with `packages/build-debs.sh` into `config/packages.chroot/`,
+so the ISO installs them directly. The script also writes an apt index (`packages/dist/Packages`)
+for a future hosted repository. Build them alone with:
+
+```sh
+sh packages/build-debs.sh
+```
+
+To add a package, create `packages/src/<name>/DEBIAN/control` and its files under the same folder.
 
 ## Check before building
 

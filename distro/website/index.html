@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VexOS Desktop - a clean Linux desktop built on Debian</title>
+  <meta name="description" content="VexOS Desktop is a small, clean Linux desktop built on Debian. Runs in VirtualBox, with Python, Node.js, and Firefox ready to use.">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top" aria-label="VexOS home">
+      <img src="assets/logo.png" alt="" width="36" height="36">
+      <span>VexOS</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+      <span data-icon="menu"></span>
+    </button>
+    <nav id="nav" class="site-nav" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#download">Download</a>
+      <a href="#about">About</a>
+      <a data-link="repo" href="#" target="_blank" rel="noopener">Source</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow" data-text="tagline"></p>
+        <h1 data-text="name"></h1>
+        <p class="lead" data-text="summary"></p>
+        <div class="actions">
+          <a class="btn btn-primary" data-link="download" href="#download" rel="noopener">
+            <span data-icon="download"></span><span>Download ISO</span>
+          </a>
+          <a class="btn btn-ghost" data-link="repo" href="#" target="_blank" rel="noopener">
+            <span data-icon="github"></span><span>View source</span>
+          </a>
+        </div>
+      </div>
+      <figure class="hero-art">
+        <img src="assets/logo.png" alt="VexOS logo" width="1408" height="768">
+      </figure>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="wrap">
+      <h2>Why VexOS</h2>
+      <p class="section-sub" data-text="featuresIntro"></p>
+      <div class="grid" data-list="features"></div>
+    </div>
+  </section>
+
+  <section id="download" class="section alt">
+    <div class="wrap">
+      <h2>Get VexOS</h2>
+      <p class="section-sub">Download the ISO and boot it in VirtualBox in a few minutes.</p>
+      <p class="download-cta">
+        <a class="btn btn-primary" data-link="download" href="#download" rel="noopener">
+          <span data-icon="download"></span><span>Download VexOS Desktop 1.0 (ISO)</span>
+        </a>
+        <a class="small-link" data-link="releases" href="#download" target="_blank" rel="noopener">All releases</a>
+      </p>
+      <ol class="steps" data-list="steps"></ol>
+      <div class="requirements">
+        <h3>Requirements</h3>
+        <ul data-list="requirements"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section">
+    <div class="wrap about">
+      <div>
+        <h2>About</h2>
+        <p data-text="aboutText"></p>
+      </div>
+      <dl class="facts">
+        <div><dt>Created by</dt><dd data-text="author"></dd></div>
+        <div><dt>Project</dt><dd data-text="repoName"></dd></div>
+        <div><dt>Base</dt><dd data-text="base"></dd></div>
+        <div><dt>Version</dt><dd data-text="version"></dd></div>
+        <div><dt>Source</dt><dd><a data-link="repo" href="#" target="_blank" rel="noopener"></a></dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>&copy; <span data-text="year"></span> <span data-text="author"></span></span>
+    <a data-link="repo" href="#" target="_blank" rel="noopener">github</a>
+  </div>
+</footer>
+
+<script src="icons.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

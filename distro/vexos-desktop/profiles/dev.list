@@ -1,0 +1,5 @@
+# dev: compilers and JavaScript tooling
+build-essential
+nodejs
+npm
+python3-dev

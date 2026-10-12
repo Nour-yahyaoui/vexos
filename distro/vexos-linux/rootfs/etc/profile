@@ -5,7 +5,11 @@ export TERM=${TERM:-linux}
 export EDITOR=vexpad
 export VISUAL=vexpad
 export PAGER=less
-export PS1='\[\e[1;35m\]vexos\[\e[0m\]:\w\$ '
+if [ -n "${BASH_VERSION:-}" ]; then
+    export PS1='\[\e[1;35m\]vexos\[\e[0m\]:\w\$ '
+else
+    export PS1='vexos:$PWD$ '
+fi
 
 alias ll='ls -la'
 alias la='ls -A'

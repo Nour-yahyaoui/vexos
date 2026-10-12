@@ -36,6 +36,48 @@ log()  { printf '\033[1;35m==>\033[0m %s\n' "$*"; }
 die()  { printf 'error: %s\n' "$*" >&2; exit 1; }
 need() { command -v "$1" >/dev/null 2>&1 || die "missing tool: $1 (see header of build.sh)"; }
 
+BASH_REF=${BASH_REF:-bash-5.3}
+
+# Static GNU bash, built from source (GitHub mirror of the official repo).
+# BASH_STATIC=/path/to/bash skips the download and build.
+build_bash() {
+    log "Bash ($BASH_REF, static, from source)"
+    mkdir -p "$OUT/src"
+    if [ -n "${BASH_STATIC:-}" ]; then
+        cp "$BASH_STATIC" "$OUT/bash"
+        log "using $BASH_STATIC"
+        return
+    fi
+    for t in make gcc curl tar strip; do need $t; done
+    src=$OUT/src/bash
+    rm -rf "$src"; mkdir -p "$src"
+    curl -fsSL -o "$OUT/src/bash.tgz" \
+        "https://codeload.github.com/bash-collection/bash/tar.gz/refs/tags/$BASH_REF"
+    tar -xzf "$OUT/src/bash.tgz" -C "$src" --strip-components=1
+    ( cd "$src" && ./configure --enable-static-link --disable-nls --without-bash-malloc \
+        --without-libintl-prefix --disable-net-redirections --disable-progcomp >/dev/null \
+        && make -j"$JOBS" >/dev/null )
+    cp "$src/bash" "$OUT/bash"
+    strip "$OUT/bash"
+    log "bash ready: $OUT/bash ($(du -h "$OUT/bash" | cut -f1))"
+}
+
+# Package the built bash as a vpk package, so `vpk` can reinstall it and the
+# repository can be hosted later.
+build_repo() {
+    log "vpk repository"
+    [ -f "$OUT/bash" ] || die "missing $OUT/bash (run: ./build.sh bash)"
+    stage=$OUT/pkg/bash
+    rm -rf "$stage"; mkdir -p "$stage/.vpk" "$stage/bin"
+    cp "$OUT/bash" "$stage/bin/bash"; chmod 755 "$stage/bin/bash"
+    printf 'Name: bash\nVersion: %s-1\nDepends:\nDescription: GNU Bourne-Again shell (static build)\n' \
+        "${BASH_REF#bash-}" > "$stage/.vpk/control"
+    rm -rf "$OUT/repo"; mkdir -p "$OUT/repo"
+    VPK_ROOT= sh "$HERE/vpk/vpk" mkpkg "$stage" "$OUT/repo"
+    sh "$HERE/vpk/vpk" mkindex "$OUT/repo"
+    log "repository ready: $OUT/repo"
+}
+
 build_kernel() {
     log "Kernel: $KERNEL_SRC"
     for t in make gcc flex bison bc; do need $t; done
@@ -75,6 +117,18 @@ build_rootfs() {
         ln -sf busybox "$ROOTFS/bin/$applet"
     done
     ln -sf ../bin/busybox "$ROOTFS/sbin/init"
+    # Real bash as the login shell (busybox sh remains for system scripts)
+    if [ -f "$OUT/bash" ]; then
+        cp "$OUT/bash" "$ROOTFS/bin/bash"
+        chmod 755 "$ROOTFS/bin/bash"
+    else
+        log "warning: no bash binary in $OUT; the login shell will be busybox sh (run ./build.sh bash)"
+        sed -i 's|/bin/bash -l|/bin/sh -l|' "$ROOTFS/etc/inittab"
+        sed -i 's|/bin/bash$|/bin/sh|' "$ROOTFS/etc/passwd"
+    fi
+    printf '/bin/sh\n/bin/bash\n' > "$ROOTFS/etc/shells"
+    # vpk package manager
+    install -Dm755 "$HERE/vpk/vpk" "$ROOTFS/usr/bin/vpk"
     chmod 755 "$ROOTFS"/init "$ROOTFS"/etc/init.d/* "$ROOTFS"/usr/bin/* \
               "$ROOTFS"/usr/share/udhcpc/* 2>/dev/null || true
     chmod 1777 "$ROOTFS/tmp"
@@ -101,10 +155,12 @@ build_iso() {
 }
 
 case "${1:-all}" in
-    all)    build_kernel; build_rootfs; build_iso ;;
+    all)    build_bash; build_kernel; build_rootfs; build_iso ;;
+    bash)   build_bash ;;
     kernel) build_kernel ;;
     rootfs) build_rootfs ;;
     iso)    build_iso ;;
+    repo)   build_repo ;;
     clean)  rm -rf "$OUT" ;;
     *)      die "unknown target: $1" ;;
 esac
