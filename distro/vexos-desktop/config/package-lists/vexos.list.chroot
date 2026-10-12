@@ -30,5 +30,6 @@ htop
 less
 sudo
 
-# VirtualBox guest integration (clipboard, resizing, shared folders)
-virtualbox-guest-x11
+# VirtualBox: display works with the standard drivers above.
+# Guest additions (clipboard, auto-resize) are not in trixie under this name;
+# install them later from the VirtualBox guest additions ISO if needed.
