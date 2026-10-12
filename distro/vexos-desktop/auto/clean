@@ -1,0 +1,4 @@
+#!/bin/sh
+# Remove build output (keeps the configuration).
+set -e
+lb clean --purge

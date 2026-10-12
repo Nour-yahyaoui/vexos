@@ -1,0 +1,16 @@
+#!/bin/sh
+# Runs inside the live system during the build: sets the VexOS identity.
+set -e
+
+cat > /etc/os-release <<'EOF'
+PRETTY_NAME="VexOS Desktop 1.0 (Debian trixie)"
+NAME="VexOS Desktop"
+VERSION="1.0"
+VERSION_ID="1.0"
+ID=vexos
+ID_LIKE=debian
+HOME_URL="https://github.com/Nour-yahyaoui/vexos"
+EOF
+
+echo "VexOS Desktop 1.0 \n \l" > /etc/issue
+echo "VexOS Desktop 1.0" > /etc/hostname

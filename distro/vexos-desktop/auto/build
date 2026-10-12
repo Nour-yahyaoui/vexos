@@ -1,0 +1,4 @@
+#!/bin/sh
+# Build wrapper: runs the live-build pipeline and keeps a copy of the log.
+set -e
+lb build 2>&1 | tee build.log
