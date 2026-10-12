@@ -28,7 +28,7 @@ for f in auto/config auto/build auto/clean \
          config/includes.chroot/etc/skel/Desktop/hello.py \
          config/includes.chroot/etc/skel/Desktop/about-vexos.html \
          config/includes.chroot/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
-         assets/vexos-logo-v2.png assets/vexos-wallpaper-v2.jpg; do
+         assets/vexos-logo-v2.png assets/vexos-wallpaper-v3.jpg; do
     if [ -f "$f" ]; then pass "exists: $f"; else bad "missing: $f"; fi
 done
 
@@ -73,7 +73,7 @@ done
 if python3 -c "import xml.dom.minidom as m,sys; m.parse(sys.argv[1])" \
     config/includes.chroot/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml 2>/dev/null; then
     pass "xfce desktop XML parses"; else bad "xfce desktop XML is invalid"; fi
-size=$(wc -c < assets/vexos-wallpaper-v2.jpg 2>/dev/null || echo 0)
+size=$(wc -c < assets/vexos-wallpaper-v3.jpg 2>/dev/null || echo 0)
 if [ "$size" -gt 10000 ]; then pass "wallpaper present (${size} bytes)"; else bad "wallpaper missing or tiny"; fi
 
 echo
