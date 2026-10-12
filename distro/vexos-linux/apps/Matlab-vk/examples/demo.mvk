@@ -1,10 +1,25 @@
-# Matlab-vk demo: run with  Matlab-vk demo.mvk
-sine   tone   5 1 500
-square clock  5 1 500
-add    tone clock mix
-show   mix
-stats  mix
-scale  tone 0.5 quiet
-delay  tone 50 late
-svg    mix /tmp/mix.svg
-list
+% Matlab-vk demo: run with  Matlab-vk demo.mvk
+clc
+t = 0:0.001:1;             % 1001 samples, 0 to 1 second
+f = 5;                     % Hz
+tone = sin(2*pi*f*t);
+env = exp(-3*t);
+
+figure
+plot(t, tone, 'b')
+hold on
+plot(t, env, 'r--')
+hold off
+grid on
+title('5 Hz tone with decay')
+xlabel('time (s)')
+ylabel('amplitude')
+legend('tone', 'envelope')
+
+subplot(2, 1, 2)
+plot(t, tone .* env)
+title('tone x envelope')
+xlabel('time (s)')
+
+peak = max(abs(tone .* env))
+saveas(gcf, 'demo-figure.html')

@@ -1,4 +1,4 @@
 Name: Matlab-vk
-Version: 1.0-1
+Version: 1.1-1
 Depends:
-Description: Matlab-vk: small signal calculator and plotter (sine, square, noise, add, show, save SVG)
+Description: Matlab-vk: MATLAB-style calculator and plotter (variables, vectors, plot, hold, grid, figures in the browser)
