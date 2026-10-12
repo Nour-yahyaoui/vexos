@@ -18,7 +18,7 @@ import {
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "VexOS Desktop 1.0: Full-Screen Linux for Web Development",
+  title: "VexOS Desktop 2.2.1: Full-Screen Linux for Web Development",
   description: site.description,
   alternates: { canonical: "/" },
 };

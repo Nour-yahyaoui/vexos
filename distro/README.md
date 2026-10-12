@@ -5,7 +5,7 @@ It ships as two projects:
 
 | Project | What it is | Status |
 |---|---|---|
-| [`vexos-desktop`](vexos-desktop/) | **VexOS Desktop 1.0**: a Debian trixie live desktop (XFCE, Firefox ESR, Python 3, Node.js, git, apt). | Ready. Boots in VirtualBox. |
+| [`vexos-desktop`](vexos-desktop/) | **VexOS Desktop 2.2.1**: a Debian trixie live desktop (XFCE, Firefox ESR, Python 3, Node.js, git, apt). | Ready. Boots in VirtualBox. |
 | [`vexos-linux`](vexos-linux/) | **VexOS Linux 1.0**: a terminal-only system. BusyBox, bash, and the `vpk` package manager, in one initramfs. | Working. Kernel build is untested. |
 | [`website`](website/) | The landing page and documentation: Next.js, SEO-optimized, light and dark themes, with a download button. | Static export with `npm run build`. |
 
@@ -13,7 +13,7 @@ It ships as two projects:
 
 Get the latest ISO from the **[Releases page](https://github.com/Nour-yahyaoui/vexos/releases)**.
 
-- Direct link to VexOS Desktop 1.0 (x86_64 ISO): `https://github.com/Nour-yahyaoui/vexos/releases/latest/download/vexos-desktop-1.0-amd64.iso`
+- Direct link to VexOS Desktop 2.2.1 (x86_64 ISO): `https://github.com/Nour-yahyaoui/vexos/releases/latest/download/vexos-desktop-2.2.1-amd64.iso`
 
 ## Quick start: VexOS Desktop in VirtualBox
 

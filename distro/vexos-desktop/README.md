@@ -1,4 +1,4 @@
-# VexOS Desktop 1.0 (Debian trixie based)
+# VexOS Desktop 2.2.1 (Debian trixie based)
 
 A Debian-based live desktop that boots in VirtualBox (BIOS or EFI):
 

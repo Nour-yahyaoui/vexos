@@ -16,8 +16,8 @@ show_about() {
 
     cat <<EOT
 
-  VexOS Desktop 1.0
-  =================
+  VexOS Desktop 2.2.1
+  ===================
 
   About me
   --------

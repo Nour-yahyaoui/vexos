@@ -34,7 +34,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-VERSION = "1.0"
+VERSION = "2.2.1"
 WEB_DIR = Path(os.environ.get("VEXDEV_WEB", "/usr/share/vexos-devstudio/web"))
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("VEXDEV_PORT", "8765"))
@@ -373,7 +373,7 @@ def groq_chat(messages, context):
     req = urllib.request.Request(GROQ_URL, data=body, method="POST", headers={
         "Content-Type": "application/json",
         "Authorization": f"Bearer {key}",
-        "User-Agent": "VexOS-DevStudio/1.0",
+        "User-Agent": "VexOS-DevStudio/2.2.1",
     })
     try:
         with urllib.request.urlopen(req, timeout=90) as resp:

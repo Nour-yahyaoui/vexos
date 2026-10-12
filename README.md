@@ -2,13 +2,13 @@
 
 VexOS is a small Linux distribution built on the Linux kernel source in this repository.
 
-**[Download VexOS Desktop 1.0 (ISO)](https://github.com/Nour-yahyaoui/vexos/releases/latest/download/vexos-desktop-1.0-amd64.iso)** · [All releases](https://github.com/Nour-yahyaoui/vexos/releases) · [Landing page](distro/website/)
+**[Download VexOS Desktop 2.2.1 (ISO)](https://github.com/Nour-yahyaoui/vexos/releases/latest/download/vexos-desktop-2.2.1-amd64.iso)** · [All releases](https://github.com/Nour-yahyaoui/vexos/releases) · [Landing page](distro/website/)
 
 ## What is in this repo
 
 | Path | What it is |
 |---|---|
-| [`distro/vexos-desktop`](distro/vexos-desktop/) | **VexOS Desktop 1.0**: a Debian trixie live desktop with XFCE, Firefox ESR, Python 3, Node.js, git, and apt. Boots in VirtualBox. |
+| [`distro/vexos-desktop`](distro/vexos-desktop/) | **VexOS Desktop 2.2.1**: a Debian trixie live desktop with XFCE, Firefox ESR, Python 3, Node.js, git, and apt. Boots in VirtualBox. |
 | [`distro/vexos-linux`](distro/vexos-linux/) | **VexOS Linux 1.0**: a terminal-only system built on this kernel, with BusyBox, bash, and the `vpk` package manager. |
 | [`distro/website`](distro/website/) | The landing page and docs: a Next.js app with SEO, light and dark themes, and a static export (`npm run build`). |
 | `arch/`, `drivers/`, `fs/`, `kernel/`, … | The Linux kernel source. The VexOS builds compile it. |
