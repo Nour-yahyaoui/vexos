@@ -1,0 +1,21 @@
+#!/bin/sh
+# Sets the display to the largest resolution the virtual machine offers.
+# Runs at login. Without VirtualBox Guest Additions the desktop cannot follow
+# window resizes, so the largest mode is the best default for a full screen.
+# Safe to run by hand at any time: Settings > Display also works.
+command -v xrandr >/dev/null 2>&1 || exit 0
+
+out=$(xrandr --query 2>/dev/null | awk '/ connected/ {print $1; exit}')
+[ -n "$out" ] || exit 0
+
+best=$(xrandr --query 2>/dev/null | awk -v o="$out" '
+    $1 == o { inside = 1; next }
+    /^[^ ]/ { inside = 0 }
+    inside && $1 ~ /^[0-9]+x[0-9]+$/ {
+        split($1, d, "x"); area = d[1] * d[2]
+        if (area > max) { max = area; mode = $1 }
+    }
+    END { print mode }')
+
+[ -n "$best" ] && xrandr --output "$out" --mode "$best" 2>/dev/null
+exit 0

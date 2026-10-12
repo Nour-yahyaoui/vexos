@@ -6,7 +6,8 @@ A Debian-based live desktop that boots in VirtualBox (BIOS or EFI):
 - Firefox ESR for HTML and JavaScript
 - Python 3 (with pip and venv), Node.js and npm
 - Full apt package manager (Debian mirrors), git, build-essential
-- Screen size: set the VM to VMSVGA with 128 MB video memory (no guest tools yet, so no clipboard sharing)
+- Full screen: at login the desktop switches to the largest resolution the VM offers (`vexos-fit-screen`). Use VMSVGA with 128 MB video memory. No Guest Additions yet, so the desktop does not follow window resizes and there is no clipboard sharing
+- Smooth desktop: XFCE with the Xfwm compositor, vsync, and a Plank dock pinned to Firefox, Terminal, and DevStudio
 - VexOS wallpaper, set as the default XFCE background
 - `vexpad`, the same terminal editor as VexOS Linux (`vexpad --help`)
 
@@ -110,7 +111,7 @@ On Ubuntu, `live-build` may be an older version. Debian trixie hosts work best.
 
 1. New VM: Type *Linux*, Version *Debian (64-bit)*, 4 GB RAM, 2 CPUs, 20 GB disk (optional).
 2. Storage: attach `live-image-amd64.hybrid.iso` to the optical drive.
-3. System > Enable EFI only if you want UEFI; BIOS works by default.
+3. Display: set Video Memory to 128 MB and Graphics Controller to VMSVGA (Display settings). System > Enable EFI only if you want UEFI; BIOS works by default.
 4. Start the VM. The live desktop boots; a `Desktop/` folder has sample files:
    - `hello-web.html`: open it in Firefox to test JavaScript.
    - `hello.py`: run with `python3 hello.py` in a terminal.

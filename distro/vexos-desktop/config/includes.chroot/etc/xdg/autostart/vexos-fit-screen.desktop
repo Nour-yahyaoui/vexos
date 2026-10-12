@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Fit screen
+Comment=Use the largest resolution the virtual machine offers
+Exec=vexos-fit-screen
+X-GNOME-Autostart-enabled=true
+NoDisplay=true

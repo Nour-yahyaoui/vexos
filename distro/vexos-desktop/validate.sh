@@ -22,6 +22,8 @@ for f in auto/config auto/build auto/clean \
          packages/src/vexos-devstudio/usr/share/vexos-devstudio/web/app.css \
          packages/src/vexos-devstudio/usr/share/applications/vexos-devstudio.desktop \
          config/hooks/normal/0100-vexos-branding.hook.chroot \
+         config/includes.chroot/usr/bin/vexos-fit-screen \
+         config/includes.chroot/etc/xdg/autostart/vexos-fit-screen.desktop \
          config/includes.chroot/etc/skel/Desktop/hello-web.html \
          config/includes.chroot/etc/skel/Desktop/hello.py \
          config/includes.chroot/etc/skel/Desktop/about-vexos.html \
@@ -45,7 +47,8 @@ done
 # 4. Executable bits where they matter
 for f in auto/config auto/build auto/clean packages/build-debs.sh \
          config/hooks/normal/*.hook.chroot packages/src/vexpad/usr/bin/vexpad \
-         packages/src/vexos-devstudio/usr/bin/vexos-devstudio packages/src/vexos-devstudio/usr/lib/vexos-devstudio/server.py; do
+         packages/src/vexos-devstudio/usr/bin/vexos-devstudio packages/src/vexos-devstudio/usr/lib/vexos-devstudio/server.py \
+         config/includes.chroot/usr/bin/vexos-fit-screen; do
     if [ -x "$f" ]; then pass "executable: $f"; else bad "not executable: $f"; fi
 done
 
