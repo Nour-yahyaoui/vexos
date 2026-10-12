@@ -26,6 +26,11 @@ for f in auto/config auto/build auto/clean validate.sh \
     if sh -n "$f" 2>/dev/null; then pass "syntax: $f"; else bad "syntax error: $f"; fi
 done
 
+# 2b. auto scripts must use 'noauto' to avoid recursion
+for f in auto/build auto/clean; do
+    if grep -q 'noauto' "$f"; then pass "noauto set: $f"; else bad "missing 'noauto' (would loop): $f"; fi
+done
+
 # 3. Executable bits where they matter
 for f in auto/config auto/build auto/clean config/hooks/normal/*.hook.chroot \
          config/includes.chroot/usr/local/bin/vexpad; do

@@ -1,4 +1,5 @@
 #!/bin/sh
 # Build wrapper: runs the live-build pipeline and keeps a copy of the log.
+# "noauto" stops lb from running this script again (which would loop forever).
 set -e
-lb build 2>&1 | tee build.log
+lb build noauto "$@" 2>&1 | tee build.log
