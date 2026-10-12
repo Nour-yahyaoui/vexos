@@ -1,0 +1,9 @@
+# live-build output (large, generated)
+.build/
+cache/
+chroot/
+binary/
+chroot.packages.*
+*.iso
+*.hybrid.iso
+build.log
