@@ -3,10 +3,14 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Documentation",
+  title: "Documentation: Linux Live ISO Guide",
   description:
-    "VexOS Desktop documentation: install in VirtualBox, first login, VexOS DevStudio, ten tutorials, building the ISO, troubleshooting, and FAQ.",
+    "VexOS Desktop docs: run the Linux live ISO in VirtualBox, first login, the DevStudio web IDE, ten web and C tutorials, building the Debian trixie ISO, and FAQ.",
   alternates: { canonical: "/docs/" },
+  openGraph: {
+    title: "VexOS Desktop documentation: Linux live ISO in VirtualBox",
+    description: "Install the VexOS Linux distro in VirtualBox, learn the DevStudio IDE, and build the ISO from source.",
+  },
 };
 
 const toc = [

@@ -25,6 +25,25 @@ npx serve out        # optional local preview
 
 `out/` is a plain folder, so any static host works: GitHub Pages, Netlify, Cloudflare Pages, or nginx.
 
+## SEO
+
+Built in:
+
+- **Titles and descriptions** per page, with the search terms (Linux distro, Linux live ISO, Debian trixie, VirtualBox, web development, Nour-yahyaoui).
+- **Structured data (JSON-LD):** `WebSite` and `Person` in the layout, `SoftwareApplication` and `FAQPage` on the landing page. The FAQ on the page and in the structured data come from the same list (`src/lib/seo.ts`).
+- **Identity links:** `rel="me"` and `rel="author"` point to the GitHub profile.
+- **Crawling:** `sitemap.xml`, `robots.txt`, canonical URLs, Open Graph and Twitter cards, and Google's large image and snippet directives.
+
+After you deploy, do these once:
+
+1. Build with the real address: `NEXT_PUBLIC_SITE_URL=https://your-domain.example npm run build`.
+2. Verify the site in Google Search Console. Copy the HTML-tag code, then build with `GOOGLE_SITE_VERIFICATION=<code> npm run build`.
+3. In Search Console, submit `https://your-domain/sitemap.xml`.
+4. On your GitHub profile, add the site URL, so `rel="me"` is confirmed from both sides.
+5. Link the site from the repository README and from the release notes. Inbound links help new pages get found.
+
+Ranking for a generic term such as "Linux" takes time and competes with large, established sites. The landing page targets long-tail searches (for example, "Linux distro for web development" or "Debian trixie live ISO VirtualBox") and branded searches for VexOS and the author's name, which should rank quickly once the site is public.
+
 ## Before you deploy
 
 - Set the public address so canonical links, the sitemap, and social cards point to the right place:

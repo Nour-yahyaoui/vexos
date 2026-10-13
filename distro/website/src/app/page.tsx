@@ -16,11 +16,18 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { site } from "@/lib/site";
+import { faq, faqLd, softwareLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "VexOS Desktop 2.2.1: Full-Screen Linux for Web Development",
-  description: site.description,
+  title: { absolute: "VexOS Desktop 2.2.1: Free Linux Distro and Live ISO for Web Development" },
+  description:
+    "Free Linux distro and live ISO for web development: Debian trixie, XFCE, Node.js, Rust, Python 3, and a web IDE. Runs in VirtualBox. By Nour-yahyaoui.",
   alternates: { canonical: "/" },
+  openGraph: {
+    title: "VexOS Desktop 2.2.1: Free Linux Distro and Live ISO for Web Development",
+    description:
+      "Free Linux distro and live ISO for web development: Debian trixie, XFCE, Node.js, Rust, Python 3, and a web IDE. Runs in VirtualBox.",
+  },
 };
 
 const features = [
@@ -79,29 +86,8 @@ const steps = [
   },
 ];
 
-const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: `${site.name} ${site.version}`,
-    applicationCategory: "DeveloperApplication",
-    operatingSystem: "Linux (Debian trixie live ISO), VirtualBox",
-    description: site.description,
-    url: site.url,
-    downloadUrl: site.releases,
-    codeRepository: site.repo,
-    author: { "@type": "Person", name: site.author, url: site.profile },
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: site.author,
-    url: site.profile,
-    sameAs: [site.profile, site.repo],
-    image: site.avatar,
-  },
-];
+// Structured data for this page. WebSite and Person are in the layout.
+const jsonLd = [softwareLd(), faqLd()];
 
 export default function HomePage() {
   return (
@@ -149,7 +135,7 @@ export default function HomePage() {
             <p className="eyebrow">What it is</p>
             <h2 id="explained-title">A desktop that is ready to code the moment it boots</h2>
             <p className="muted">
-              VexOS Desktop is a live Linux system built from Debian trixie. You download one ISO, boot it,
+              VexOS Desktop is a Linux distro, shipped as a live Linux image (ISO), built from Debian trixie. You download one ISO, boot it,
               and get a full desktop with a browser, a terminal, and development tools. Nothing is installed
               on your computer, and changes disappear on reboot unless you install the system to disk.
             </p>
@@ -477,6 +463,23 @@ cd ~/VexProjects
               <h3>Troubleshooting and FAQ</h3>
               <p>Small screen, slow system, lost files, and common questions.</p>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="section alt" aria-labelledby="faq-title">
+        <div className="container">
+          <div className="section-head">
+            <p className="eyebrow">FAQ</p>
+            <h2 id="faq-title">Questions about VexOS Desktop</h2>
+          </div>
+          <div className="faq">
+            {faq.map(({ q, a }) => (
+              <details key={q} className="faq-item">
+                <summary>{q}</summary>
+                <p className="muted">{a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
