@@ -5,7 +5,7 @@ It ships as two projects:
 
 | Project | What it is | Status |
 |---|---|---|
-| [`vexos-desktop`](vexos-desktop/) | **VexOS Desktop 2.2.1**: a Debian trixie live desktop (XFCE, Firefox ESR, Python 3, Node.js, git, apt). | Ready. Boots in VirtualBox. |
+| [`vexos-desktop`](vexos-desktop/) | **VexOS Desktop 2.2.1**: a Debian trixie live desktop (XFCE, Firefox ESR, Python 3, Node.js, git, apt). | Release candidate. Built for VirtualBox; VM testing in progress. |
 | [`vexos-linux`](vexos-linux/) | **VexOS Linux 1.0**: a terminal-only system. BusyBox, bash, and the `vpk` package manager, in one initramfs. | Working. Kernel build is untested. |
 | [`website`](website/) | The landing page and documentation: Next.js, SEO-optimized, light and dark themes, with a download button. | Static export with `npm run build`. |
 
@@ -21,13 +21,13 @@ Get the latest ISO from the **[Releases page](https://github.com/Nour-yahyaoui/v
 2. Create a VM: Type *Linux*, Version *Debian (64-bit)*, 4 GB RAM, 2 CPUs.
 3. Attach the ISO to the optical drive and start the VM.
 4. Set **Display → Graphics Controller: VMSVGA**, **Video Memory: 128 MB**, so the desktop fills the window.
-5. Log in as `vex` / `vexos`. Firefox, a terminal, Python 3, and Node.js are installed.
+5. Log in as `vex` / `vexos`. Firefox, a terminal, Python 3, Node.js, and Rust are installed.
 
 Changes made in the live session are lost on reboot.
 
 ## Build it yourself
 
-The build runs on Debian or Ubuntu, not in a container, and needs about 15 GB of disk space.
+The build runs on Debian or Ubuntu (or a Debian VM), not in a container, and needs about 25 GB of disk space. WSL often cannot run it.
 
 ```sh
 sudo apt install live-build
@@ -37,10 +37,10 @@ cd vexos && git sparse-checkout set distro/vexos-desktop
 cd distro/vexos-desktop
 sh validate.sh
 sudo sh auto/config
-sudo sh auto/build 2>&1 | tee build.log
+sudo sh auto/build
 ```
 
-The ISO is `live-image-amd64.hybrid.iso`. The build takes 30 to 90 minutes.
+The ISO is `live-image-amd64.hybrid.iso`. The build takes 30 to 90 minutes. A failed build resumes with `sudo sh auto/build`; see the desktop README for details.
 See [`vexos-desktop/README.md`](vexos-desktop/README.md) for profiles and packages.
 
 ## Repository layout

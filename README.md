@@ -8,7 +8,7 @@ VexOS is a small Linux distribution built on the Linux kernel source in this rep
 
 | Path | What it is |
 |---|---|
-| [`distro/vexos-desktop`](distro/vexos-desktop/) | **VexOS Desktop 2.2.1**: a Debian trixie live desktop with XFCE, Firefox ESR, Python 3, Node.js, git, and apt. Boots in VirtualBox. |
+| [`distro/vexos-desktop`](distro/vexos-desktop/) | **VexOS Desktop 2.2.1** (release candidate): a Debian trixie live desktop with XFCE, Firefox ESR, Python 3, Node.js, Rust, git, and apt. Built for VirtualBox. |
 | [`distro/vexos-linux`](distro/vexos-linux/) | **VexOS Linux 1.0**: a terminal-only system built on this kernel, with BusyBox, bash, and the `vpk` package manager. |
 | [`distro/website`](distro/website/) | The landing page and docs: a Next.js app with SEO, light and dark themes, and a static export (`npm run build`). |
 | `arch/`, `drivers/`, `fs/`, `kernel/`, … | The Linux kernel source. The VexOS builds compile it. |
@@ -16,6 +16,8 @@ VexOS is a small Linux distribution built on the Linux kernel source in this rep
 See [`distro/README.md`](distro/README.md) for an overview of the VexOS projects.
 
 ## Quick start: VexOS Desktop in VirtualBox
+
+VexOS Desktop 2.2.1 is a release candidate: the build and VirtualBox testing are in progress.
 
 1. Download the ISO from the link above.
 2. Create a VM: Type *Linux*, Version *Debian (64-bit)*, 4 GB RAM, 2 CPUs.
@@ -27,7 +29,7 @@ Changes made in the live session are lost on reboot.
 
 ## Build the desktop ISO
 
-The build runs on Debian or Ubuntu, not in a container, and needs about 15 GB of free disk space. It takes 30 to 90 minutes.
+The build runs on a Debian or Ubuntu machine (or a Debian VM), not in a container, and needs about 25 GB of free disk space. It takes 30 to 90 minutes. WSL often cannot run the build; use a Debian VM there.
 
 ```sh
 sudo apt install live-build
@@ -37,10 +39,10 @@ cd vexos && git sparse-checkout set distro/vexos-desktop
 cd distro/vexos-desktop
 sh validate.sh
 sudo sh auto/config
-sudo sh auto/build 2>&1 | tee build.log
+sudo sh auto/build
 ```
 
-The result is `live-image-amd64.hybrid.iso`. Details, profiles, and packages are in [`distro/vexos-desktop/README.md`](distro/vexos-desktop/README.md).
+The result is `live-image-amd64.hybrid.iso`. If a build fails, fix the cause and run `sudo sh auto/build` again; it resumes where it stopped. Details, profiles, and packages are in [`distro/vexos-desktop/README.md`](distro/vexos-desktop/README.md).
 
 ## Build VexOS Linux
 

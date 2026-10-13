@@ -4,6 +4,10 @@ The landing page and documentation for VexOS Desktop, built with Next.js (App Ro
 
 Pages: `/` (landing), `/docs/` (documentation). The site has SEO metadata, Open Graph and Twitter cards, JSON-LD, `sitemap.xml`, `robots.txt`, a web manifest, and favicons.
 
+Landing page sections, in order: What it is · How VexOS is built (kernel to toolchains) · Where it lives and how it runs · Why it fits advanced work · Web, mobile, and desktop · Installing software · Features · Preinstalled toolchains · DevStudio · Get started · Learn · About.
+
+The version (`site.version` in `src/lib/site.ts`) is 2.2.1.
+
 ## Run locally
 
 ```sh
@@ -33,7 +37,7 @@ npx serve out        # optional local preview
 
 | Path | What it is |
 |---|---|
-| `src/app/page.tsx` | Landing page and its structured data |
+| `src/app/page.tsx` | Landing page sections and its structured data |
 | `src/app/docs/page.tsx` | Documentation |
 | `src/app/layout.tsx` | Site metadata, header and footer, theme script |
 | `src/app/globals.css` | Dark and light themes, matching the desktop |
