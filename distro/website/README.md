@@ -36,7 +36,7 @@ Built in:
 
 After you deploy, do these once:
 
-1. Build with the real address: `NEXT_PUBLIC_SITE_URL=https://your-domain.example npm run build`.
+1. Deploy on Vercel: set the project's **Root Directory** to `distro/website`. Vercel detects Next.js and builds the static export. Set `NEXT_PUBLIC_SITE_URL` in the Vercel project only if you use a different domain.
 2. Verify the site in Google Search Console. Copy the HTML-tag code, then build with `GOOGLE_SITE_VERIFICATION=<code> npm run build`.
 3. In Search Console, submit `https://your-domain/sitemap.xml`.
 4. On your GitHub profile, add the site URL, so `rel="me"` is confirmed from both sides.
@@ -48,7 +48,7 @@ Ranking for a generic term such as "Linux" takes time and competes with large, e
 
 - Set the public address so canonical links, the sitemap, and social cards point to the right place:
   `NEXT_PUBLIC_SITE_URL=https://your-domain.example npm run build`
-  The default is `https://nour-yahyaoui.github.io`.
+  The default is `https://vexos-omega.vercel.app` (the Vercel deployment).
 - The site lives at the root path. If you host it at a subpath (for example a GitHub project page at `/vexos/`), add `basePath` in `next.config.ts`.
 - Facts shown on the site (name, GitHub links, default login) are in `src/lib/site.ts`.
 
