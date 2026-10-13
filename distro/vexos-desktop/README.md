@@ -6,7 +6,7 @@ VexOS Desktop is a live Linux desktop built from Debian trixie. It boots from on
 
 ## What it includes
 
-- **Desktop:** XFCE with the Xfwm compositor and vsync, LightDM login with autologin, NetworkManager, a Plank dock pinned to Firefox, Terminal, and DevStudio, and the VexOS wallpaper.
+- **Desktop:** XFCE with the Xfwm compositor and vsync, styled like Ubuntu: a top bar (applications menu, clock, system tray), a Plank dock on the left pinned to Firefox, Terminal, and DevStudio, the Yaru theme (red dark variant) and Yaru icons, and the Ubuntu font. LightDM login with autologin, NetworkManager, and the VexOS wallpaper.
 - **Full screen:** at login, `vexos-fit-screen` switches to the largest resolution the VM offers. Use VMSVGA with 128 MB of video memory.
 - **Browser:** Firefox ESR.
 - **Development toolchains:** gcc, g++, make, gdb, cmake; Node.js 20 LTS with npm; Rust with cargo and rustfmt; Python 3 with pip, venv, and development headers; git; build-essential.

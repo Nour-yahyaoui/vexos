@@ -10,9 +10,12 @@ fonts-dejavu-core
 network-manager
 network-manager-gnome
 firefox-esr
-# look and feel: dark theme, modern icons and font, dock
+# look and feel: Ubuntu-style (Yaru theme and icons, Ubuntu font), dock
+# window borders use arc-theme (xfwm4 theme)
+yaru-theme-gtk
+yaru-theme-icon
+fonts-ubuntu
 arc-theme
-papirus-icon-theme
 fonts-inter
 fonts-jetbrains-mono
 plank
