@@ -1,0 +1,2 @@
+# VexOS language: English interface, Italian keyboard (set in /etc/default/keyboard).
+LANG="en_US.UTF-8"

@@ -1,0 +1,7 @@
+#!/bin/sh
+# Runs inside the live system during the build: generates the English locale
+# so the interface is in English while the keyboard stays Italian.
+set -e
+sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+update-locale LANG=en_US.UTF-8

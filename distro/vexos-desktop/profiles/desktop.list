@@ -20,6 +20,10 @@ fonts-inter
 fonts-jetbrains-mono
 plank
 x11-xserver-utils
+# keyboard: Italian and English layouts, locale, and the panel layout switcher
+locales
+keyboard-configuration
+xfce4-xkb-plugin
 # dev environment: C/C++, Node.js, Rust, and the DevStudio IDE (included by default)
 build-essential
 gdb

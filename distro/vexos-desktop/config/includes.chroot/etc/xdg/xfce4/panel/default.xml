@@ -16,6 +16,7 @@
         <value type="int" value="2"/>
         <value type="int" value="3"/>
         <value type="int" value="4"/>
+        <value type="int" value="6"/>
         <value type="int" value="5"/>
       </property>
     </property>
@@ -33,6 +34,7 @@
       <property name="expand" type="bool" value="true"/>
       <property name="style" type="uint" value="0"/>
     </property>
+    <property name="plugin-6" type="string" value="xkb"/>
     <property name="plugin-5" type="string" value="systray"/>
   </property>
 </channel>

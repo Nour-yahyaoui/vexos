@@ -471,7 +471,7 @@ class Handler(BaseHTTPRequestHandler):
 
         if method == "GET" and path in ("/", "/index.html"):
             return self._index()
-        if method == "GET" and path in ("/app.js", "/app.css"):
+        if method == "GET" and path in ("/app.js", "/app.css", "/layout.js"):
             return self._static(path.lstrip("/"))
         if method == "GET" and path.startswith("/preview/"):
             return self._preview(path[len("/preview/"):])

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/app.css">
 </head>
 <body>
-<div class="app">
+<div class="app" id="app">
   <header class="top">
     <div class="brand"><span class="logo">V</span> DevStudio</div>
     <div class="group">
@@ -28,26 +28,37 @@
       <button id="save" class="btn" title="Save (Ctrl+S)">Save</button>
     </div>
     <div class="group grow"></div>
+    <div class="group views" title="Show or hide panels">
+      <button id="tglSide" class="btn toggle" aria-pressed="true" title="Toggle sidebar">Sidebar</button>
+      <button id="tglBottom" class="btn toggle" aria-pressed="true" title="Toggle console">Console</button>
+      <button id="tglAi" class="btn toggle" aria-pressed="true" title="Toggle AI chat">AI chat</button>
+    </div>
     <div class="group">
       <button id="openSettings" class="btn ghost" title="Settings and API keys">Settings</button>
     </div>
+    <div class="group winbtns">
+      <button id="winMin" class="win" title="Focus mode: hide the side panels (click again to restore)" aria-label="Focus mode">&minus;</button>
+      <button id="winMax" class="win" title="Full screen (F11 also works)" aria-label="Full screen">+</button>
+    </div>
   </header>
 
-  <aside class="side">
+  <aside class="side" id="side">
     <div class="side-head">
       <span>Workspace</span>
-      <div class="side-actions">
-        <button id="newFile" class="mini" title="New file">+ File</button>
-        <button id="newFolder" class="mini" title="New folder">+ Folder</button>
-        <button id="renameItem" class="mini" title="Rename selected">Rename</button>
-        <button id="deleteItem" class="mini danger" title="Delete selected">Delete</button>
-        <button id="refresh" class="mini" title="Refresh">Refresh</button>
-      </div>
+      <button id="closeSide" class="close" title="Close sidebar" aria-label="Close sidebar">&times;</button>
+    </div>
+    <div class="side-actions">
+      <button id="newFile" class="mini" title="New file">+ File</button>
+      <button id="newFolder" class="mini" title="New folder">+ Folder</button>
+      <button id="renameItem" class="mini" title="Rename selected">Rename</button>
+      <button id="deleteItem" class="mini danger" title="Delete selected">Delete</button>
+      <button id="refresh" class="mini" title="Refresh">Refresh</button>
     </div>
     <div id="tree" class="tree" role="tree"></div>
   </aside>
+  <div class="resizer v" id="rzSide" data-resize="side" title="Drag to resize. Double-click to reset." role="separator" aria-orientation="vertical"></div>
 
-  <main class="editor-wrap">
+  <main class="editor-wrap" id="main">
     <div id="tabs" class="tabs"></div>
     <div id="editor" class="editor"></div>
     <textarea id="fallback" class="fallback hidden" spellcheck="false"></textarea>
@@ -62,10 +73,14 @@
     </div>
   </main>
 
-  <aside class="ai">
+  <div class="resizer v" id="rzAi" data-resize="ai" title="Drag to resize. Double-click to reset." role="separator" aria-orientation="vertical"></div>
+  <aside class="ai" id="ai">
     <div class="side-head">
       <span>AI assistant</span>
-      <span id="aiState" class="pill">no key</span>
+      <span class="head-right">
+        <span id="aiState" class="pill">no key</span>
+        <button id="closeAi" class="close" title="Close AI chat" aria-label="Close AI chat">&times;</button>
+      </span>
     </div>
     <div class="ai-actions">
       <button class="chip" data-action="explain">Explain</button>
@@ -80,12 +95,14 @@
     </form>
   </aside>
 
-  <section class="bottom">
+  <div class="resizer h" id="rzBottom" data-resize="bottom" title="Drag to resize. Double-click to reset." role="separator" aria-orientation="horizontal"></div>
+  <section class="bottom" id="bottom">
     <div class="tabs bottom-tabs">
       <button class="tab active" data-panel="output">Output</button>
       <button class="tab" data-panel="preview">Preview</button>
       <span class="grow"></span>
       <button id="clearOutput" class="mini">Clear</button>
+      <button id="closeBottom" class="close" title="Close console" aria-label="Close console">&times;</button>
     </div>
     <div id="panel-output" class="panel">
       <pre id="output" class="output"></pre>
@@ -133,5 +150,6 @@
 </dialog>
 
 <script src="/app.js"></script>
+<script src="/layout.js"></script>
 </body>
 </html>

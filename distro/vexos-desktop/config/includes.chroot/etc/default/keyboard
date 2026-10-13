@@ -1,0 +1,7 @@
+# VexOS keyboard: Italian first, English (US) second. Switch with Alt+Shift
+# or Super+Space, or click the flag in the top bar.
+XKBMODEL="pc105"
+XKBLAYOUT="it,us"
+XKBVARIANT=","
+XKBOPTIONS="grp:alt_shift_toggle,grp:win_space_toggle"
+BACKSPACE="guess"
