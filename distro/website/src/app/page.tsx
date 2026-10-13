@@ -27,7 +27,7 @@ const features = [
   {
     icon: Zap,
     title: "Smooth by default",
-    text: "XFCE with the Xfwm compositor and vsync, a clean dark theme, and a dock pinned to your tools.",
+    text: "An Ubuntu-style layout: a top bar, a dock on the left pinned to your tools, and the Yaru dark theme in VexOS red.",
   },
   {
     icon: Code2,
@@ -200,7 +200,7 @@ export default function HomePage() {
             <li>
               <h3>Desktop</h3>
               <p>
-                XFCE with the Xfwm compositor, LightDM login, NetworkManager, Firefox ESR, and a Plank dock.
+                XFCE with the Xfwm compositor, LightDM login, NetworkManager, Firefox ESR, a top bar, and a Plank dock on the left.
                 At login, <code>vexos-fit-screen</code> switches to the largest resolution VirtualBox offers.
               </p>
             </li>

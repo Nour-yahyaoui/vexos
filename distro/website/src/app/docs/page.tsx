@@ -83,7 +83,9 @@ export default function DocsPage() {
         <section id="desktop">
           <h2>The desktop</h2>
           <ul>
-            <li><strong>Dock:</strong> Firefox, Terminal, and VexOS DevStudio.</li>
+            <li><strong>Top bar:</strong> applications menu, clock, and system tray.</li>
+            <li><strong>Dock:</strong> on the left, with Firefox, Terminal, and VexOS DevStudio.</li>
+            <li><strong>Look:</strong> the Yaru dark theme in VexOS red, Yaru icons, and the Ubuntu font.</li>
             <li><strong>Desktop folder:</strong> sample files. <code>hello-web.html</code> runs JavaScript in Firefox, <code>hello.py</code> runs with <code>python3 hello.py</code>, and <code>about-vexos.html</code> shows the About page.</li>
             <li><strong>vexpad:</strong> a small terminal editor. <code>vexpad --help</code> shows About and system information. <code>vexpad --guide</code> shows the editor cheat sheet.</li>
             <li><strong>Packages:</strong> apt works on Debian mirrors. For example, <code>sudo apt install htop</code>.</li>
@@ -198,7 +200,7 @@ htop`}</code></pre>
         <section id="build">
           <h2>Build the ISO</h2>
           <p>
-            You can build the ISO from source on a Debian or Ubuntu machine, including Debian under WSL. Needs about 25 GB of
+            You can build the ISO from source on a Debian or Ubuntu machine, or in a Debian virtual machine. WSL often cannot run the build. Needs about 25 GB of
             free disk, 4 GB of RAM, and an internet connection. A build takes 30 to 90 minutes.
           </p>
           <h3>1. Install the build tools</h3>
