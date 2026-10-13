@@ -1,0 +1,4 @@
+[PlankDockPreferences]
+# Position: 0 = bottom, 1 = top, 2 = left, 3 = right.
+# Left side, like the Ubuntu dock.
+Position=2
